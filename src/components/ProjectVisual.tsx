@@ -1,0 +1,9 @@
+export function ProjectVisual({ id }: { id: string }) {
+  return <div className={`project-visual visual-${id}`} aria-hidden="true">
+    {id === 'bookstore' && <div className="bookstore-preview"><div className="mini-browser"><i /><i /><i /><span>bookstore.app</span></div><div className="bookstore-header"><b>BookStore<span>®</span></b><span>Find your next story.</span></div><div className="books"><span>THE<br />CREATIVE<br />MIND<i>01 — EDITION</i></span><span>MAKE<br />IT<br />HAPPEN<i>02 — EDITION</i></span><span>LESS,<br />BUT<br />BETTER<i>03 — EDITION</i></span></div></div>}
+    {id === 'norvis' && <div className="norvis-preview"><span className="preview-small">LOCAL INTELLIGENCE</span><div className="voice-wave">{Array.from({ length: 25 }, (_, index) => <i key={index} style={{ height: `${18 + Math.sin(index * 1.7) ** 2 * (58 - Math.abs(12 - index) * 3)}px` }} />)}</div><strong>NORVIS<span>●</span></strong><span className="preview-small">YOUR VOICE. YOUR MACHINE.</span></div>}
+    {id === 'splitbill' && <div className="splitbill-preview"><span className="preview-small">XYZEN / SPLIT BILL</span><div className="split-total">1 200 <small>сом</small></div><div className="split-people"><span>А</span><i /><span>Б</span><i /><span>В</span></div><span className="split-caption">Общий счёт. Простой расчёт.</span></div>}
+    {id === 'chess' && <div className="chess-preview"><div className="chess-board">{Array.from({ length: 16 }, (_, index) => <span key={index} className={(Math.floor(index / 4) + index) % 2 ? 'square-dark' : ''}>{({ 1: '♜', 4: '♞', 10: '♟', 15: '♔' } as Record<number, string>)[index]}</span>)}</div><span className="preview-small">YOUR NEXT MOVE.</span></div>}
+    {id === 'alhuda' && <div className="alhuda-preview"><span className="alhuda-star">✳</span><strong>Al Huda</strong><span className="preview-small">A LITTLE SPACE FOR FOCUS.</span><div className="alhuda-line" /></div>}
+  </div>;
+}
