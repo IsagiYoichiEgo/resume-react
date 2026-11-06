@@ -20,3 +20,6 @@ body:has(dialog[open]) .mascot,body:has(dialog[open]) .pet-restore{visibility:hi
 @media(max-width:599px){.mascot{width:94px;height:105px}.pet-hide{top:0;width:30px;height:30px}.pet-bubble{font-size:12px;padding:11px 8px 11px 13px}}
 @media(prefers-reduced-motion:reduce){.mascot *{animation:none!important;transition:none!important}.mascot .cat-idle{opacity:1!important}.mascot .cat-walk{opacity:0!important}}
 @media print{.mascot,.pet-restore{display:none!important}}
+
+.pet-bubble{visibility:hidden}
+.mascot[data-bubble-clear="true"] .pet-bubble{visibility:visible}

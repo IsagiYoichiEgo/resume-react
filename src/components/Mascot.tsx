@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from 'react';
-import { canShowBubble, safePetPlacement, scrollProgress } from '../lib/motion';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { canShowBubble, canPlaceBubble, safePetPlacement, scrollProgress } from '../lib/motion';
 import './mascot.css';
 
 const base = import.meta.env.BASE_URL;
@@ -10,6 +10,16 @@ const sectionMessages: Record<string, string> = {
   contact: 'Здесь можно написать Аброрбеку.',
 };
 const clickMessages = ['У вас хороший вкус. Мур!', 'Я тут слежу за порядком. И за курсором.', 'Лапка за любопытство! 🐾', 'Проекты выше, контакты ниже. Всё просто.'];
+
+function controlBounds() {
+  return [...document.querySelectorAll<HTMLElement>('main a, main button, footer a')].map(element => element.getBoundingClientRect()).filter(rect => rect.width > 0 && rect.height > 0 && rect.bottom > 0 && rect.top < window.innerHeight);
+}
+
+function syncBubbleVisibility(root:HTMLDivElement|null) {
+  const bubble = root?.querySelector<HTMLElement>('.pet-bubble');
+  if (!root || !bubble) return;
+  root.setAttribute('data-bubble-clear', String(canPlaceBubble(bubble.getBoundingClientRect(),controlBounds(),document.documentElement.clientWidth,window.innerHeight)));
+}
 
 export function Mascot() {
   const root = useRef<HTMLDivElement>(null);
@@ -55,7 +65,7 @@ export function Mascot() {
       const width = document.documentElement.clientWidth;
       const progress = scrollProgress(y, document.documentElement.scrollHeight, window.innerHeight);
       const catWidth = width < 600 ? 94 : 122;
-      const controls = [...document.querySelectorAll<HTMLElement>('main a, main button, footer a')].map(element => element.getBoundingClientRect()).filter(rect => rect.width > 0 && rect.height > 0 && rect.bottom > 0 && rect.top < window.innerHeight);
+      const controls = controlBounds();
       const {x,bottom} = safePetPlacement(progress, width, window.innerHeight, catWidth, width < 600 ? 105 : 140, controls, reduced);
       root.current?.style.setProperty('--pet-bottom', bottom + 'px');
       document.documentElement.style.setProperty('--page-progress', String(progress));
@@ -64,6 +74,7 @@ export function Mascot() {
       const bubbleWidth = Math.min(220, width - 32);
       const bubbleLeft = Math.min(Math.max(16, x - 35), width - bubbleWidth - 16) - x;
       root.current?.style.setProperty('--bubble-x', bubbleLeft + 'px');
+      syncBubbleVisibility(root.current);
       const delta = y - previousY;
       if (visible && pendingScroll && Math.abs(delta) > 0.5 && !reduced) {
         root.current?.setAttribute('data-direction', delta > 0 ? 'right' : 'left');
@@ -105,6 +116,8 @@ export function Mascot() {
   }, [visible, reduced]);
 
   useEffect(() => () => { clearTimeout(bubbleTimer.current); clearTimeout(happyTimer.current); }, []);
+
+  useLayoutEffect(() => { syncBubbleVisibility(root.current); }, [bubble]);
 
   function toggle(show: boolean) {
     setVisible(show);

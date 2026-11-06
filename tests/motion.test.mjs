@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { scrollProgress, petPosition, canShowBubble, safePetPlacement } from '../src/lib/motion.ts';
+import { scrollProgress, petPosition, canShowBubble, safePetPlacement, canPlaceBubble } from '../src/lib/motion.ts';
 
 test('scroll progress reaches the end of the readable page', () => {
   assert.equal(scrollProgress(600, 2000, 800), 0.5);
@@ -50,4 +50,12 @@ test('the companion moves above a full-width mobile action', () => {
 
 test('reduced motion keeps the companion in one place while scrolling', () => {
   assert.deepEqual(safePetPlacement(0,390,844,94,105,[],true), safePetPlacement(1,390,844,94,105,[],true));
+});
+
+
+test('speech bubbles cannot cover controls above the cat body', () => {
+  const bubble = {left:139,right:359,top:673,bottom:725};
+  assert.equal(canPlaceBubble(bubble,[{left:24,right:366,top:650,bottom:694}],390,844),false);
+  assert.equal(canPlaceBubble(bubble,[{left:24,right:366,top:580,bottom:624}],390,844),true);
+  assert.equal(canPlaceBubble({...bubble,top:-10},[],390,844),false);
 });

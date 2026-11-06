@@ -32,3 +32,8 @@ export function safePetPlacement(progress:number, width:number, height:number, p
   }
   return {x,bottom};
 }
+
+
+export function canPlaceBubble(bubble:ControlBounds, controls:ControlBounds[], width:number, height:number):boolean {
+  return bubble.left >= 8 && bubble.right <= width-8 && bubble.top >= 8 && bubble.bottom <= height-8 && !controls.some(control => control.right > bubble.left-8 && control.left < bubble.right+8 && control.bottom > bubble.top-8 && control.top < bubble.bottom+8);
+}
