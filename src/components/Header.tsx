@@ -33,11 +33,11 @@ export function Header() {
 
   return <header className="site-header" ref={header}>
     <div className="header-inner container">
-      <a className="brand" href="#home" aria-label="alimbro — Аброрбек Алимжанов, начало" onClick={() => setOpen(false)}>alimbro<span>.</span></a>
+      <a className="brand" href="#home" aria-label="alimbro — Аброрбек Алимжанов, начало" onClick={() => setOpen(false)}><span className="brand-word light-text">alimbro</span><span className="brand-dot">.</span></a>
       <nav id="main-navigation" className={'navigation ' + (open ? 'is-open' : '')} aria-label="Основная навигация">
         {navigation.map(item => <a key={item.id} href={'#' + item.id} aria-current={active === item.id ? 'location' : undefined} onClick={() => setOpen(false)}>{item.label}</a>)}
       </nav>
-      <div className="header-actions"><a className="header-contact" href={profile.whatsapp} target="_blank" rel="noreferrer">Обсудить проект <Icon name="arrow" /></a><button ref={toggle} type="button" className="icon-button menu-button" aria-label={open ? 'Закрыть меню' : 'Открыть меню'} aria-controls="main-navigation" aria-expanded={open} onClick={() => setOpen(!open)}><Icon name={open ? 'close' : 'menu'} /></button></div>
+      <div className="header-actions"><a className="header-contact" href={profile.whatsapp} target="_blank" rel="noreferrer"><span className="contact-light" aria-hidden="true"/><span>Обсудить проект</span><Icon name="arrow" /></a><button ref={toggle} type="button" className="icon-button menu-button" aria-label={open ? 'Закрыть меню' : 'Открыть меню'} aria-controls="main-navigation" aria-expanded={open} onClick={() => setOpen(!open)}><Icon name={open ? 'close' : 'menu'} /></button></div>
     </div>
   </header>;
 }

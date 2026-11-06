@@ -1,0 +1,48 @@
+/* Low-contrast light passes with long rests; the text itself never fades. */
+.light-text { color: var(--cream); }
+@supports (background-clip: text) or (-webkit-background-clip: text) {
+  .light-text, .brand .brand-word {
+    background-image: linear-gradient(108deg, #f6f3ec 0%, #f6f3ec 38%, #d9f9ed 44%, #91e5d3 48%, #fffdf5 51%, #e7dbf6 54%, #f6f3ec 61%, #f6f3ec 100%);
+    background-size: 270% 100%;
+    background-position: 100% 50%;
+    background-repeat: no-repeat;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+    animation: gentle-text-light 11s cubic-bezier(.35,0,.25,1) infinite;
+  }
+}
+.hero h1 .light-text { width: max-content; max-width: 100%; animation-delay: .3s; }
+.hero h1 .light-text:last-child { animation-delay: 1.9s; }
+.site-header .brand-word { animation-delay: 3.4s; animation-duration: 13s; }
+.site-header .brand-dot { animation: brand-lantern 12s ease-in-out infinite; }
+#projects-title .light-text { display: inline-block; animation-duration: 13s; animation-delay: 1.3s; }
+#projects-title .heading-mark { transition: transform .4s ease, text-shadow .4s ease; }
+#projects-title:hover .heading-mark { transform: translate(3px,3px); text-shadow: 0 0 14px #7de6d15c; }
+.light-text::selection { background: var(--mint); color: var(--night); -webkit-text-fill-color: var(--night); }
+
+.header-contact { position: relative; isolation: isolate; background: #0a1020; transition: color .25s ease, box-shadow .35s ease; }
+.contact-light { position: absolute; inset: -1px; z-index: -1; overflow: hidden; border-radius: inherit; pointer-events: none; }
+.contact-light::before { content: ''; position: absolute; left: 50%; top: 50%; width: 280px; height: 280px; margin: -140px; background: conic-gradient(from 0deg, #ffffff05 0deg, #ffffff05 245deg, #7de6d15c 282deg, #d5fff2cc 304deg, #7de6d14d 323deg, #ffffff05 350deg); animation: contact-orbit 12s cubic-bezier(.4,0,.2,1) infinite; }
+.contact-light::after { content: ''; position: absolute; inset: 1px; border-radius: 7px; background: #0a1020; }
+.header-contact:hover, .header-contact:focus-visible { color: #b1f2e2; box-shadow: 0 0 24px #7de6d112, inset 0 0 14px #7de6d109; }
+.header-contact svg { transition: transform .3s ease; }
+.header-contact:hover svg, .header-contact:focus-visible svg { transform: translate(2px,-2px); }
+
+@keyframes gentle-text-light { 0%,15% { background-position: 100% 50%; } 48%,100% { background-position: 0% 50%; } }
+@keyframes brand-lantern { 0%,48%,100% { text-shadow: 0 0 0 #7de6d100; } 22% { text-shadow: 0 0 12px #7de6d173, 0 0 4px #7de6d136; } }
+@keyframes contact-orbit { 0%,27% { transform: rotate(0deg); } 77%,100% { transform: rotate(360deg); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .light-text, .brand .brand-word { animation: none; background: none; color: var(--cream); -webkit-text-fill-color: currentColor; }
+  .site-header .brand-dot { animation: none; text-shadow: none; }
+  .contact-light::before { animation: none; background: linear-gradient(115deg,#ffffff20,#7de6d166,#ffffff20); }
+  .header-contact, .header-contact svg, #projects-title .heading-mark { transition: none; }
+  .header-contact:hover svg, .header-contact:focus-visible svg, #projects-title:hover .heading-mark { transform: none; text-shadow: none; }
+}
+@media (forced-colors: active) {
+  .light-text, .brand .brand-word { animation: none; background: none; color: CanvasText; -webkit-text-fill-color: currentColor; }
+  .contact-light { display: none; }
+  .header-contact { border-color: ButtonText; }
+}

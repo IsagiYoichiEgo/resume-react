@@ -13,7 +13,7 @@ export function Projects() {
   useProjectDepth(gallery);
 
   return <section id="projects" className="projects-section container" aria-labelledby="projects-title">
-    <div className="section-intro"><h2 id="projects-title">Проекты<span className="heading-mark" aria-hidden="true">↘</span></h2><p>Опубликованные учебные сайты<br />и проекты в работе.</p></div>
+    <div className="section-intro"><h2 id="projects-title"><span className="light-text">Проекты</span><span className="heading-mark" aria-hidden="true">↘</span></h2><p>Опубликованные учебные сайты<br />и проекты в работе.</p></div>
     <div className="project-grid" ref={gallery}>
       {projects.map(project => <article className={'project-card project-card-' + project.id} key={project.id}>
         <button className="project-cover" type="button" onClick={event=>{trigger.current=event.currentTarget;setSelected(project);}} aria-label={'Посмотреть проект '+project.title}><ProjectVisual id={project.id}/><span className="cover-open" aria-hidden="true"><Icon name="arrow"/></span></button>
