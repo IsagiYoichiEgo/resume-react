@@ -11,14 +11,14 @@ const sectionMessages: Record<string, string> = {
 };
 const clickMessages = ['У вас хороший вкус. Мур!', 'Я тут слежу за порядком. И за курсором.', 'Лапка за любопытство! 🐾', 'Проекты выше, контакты ниже. Всё просто.'];
 
-function controlBounds() {
-  return [...document.querySelectorAll<HTMLElement>('main a, main button, footer a')].map(element => element.getBoundingClientRect()).filter(rect => rect.width > 0 && rect.height > 0 && rect.bottom > 0 && rect.top < window.innerHeight);
+function controlBounds(includeText=false) {
+  return [...document.querySelectorAll<HTMLElement>('main a, main button:not(.project-cover), main .cover-open, main .project-topline, footer a'+(includeText?', main p, main h1, main h2, main h3':''))].filter(element => element.matches('a,button,.cover-open') || Boolean(element.textContent?.trim())).map(element => element.getBoundingClientRect()).filter(rect => rect.width > 0 && rect.height > 0 && rect.bottom > 0 && rect.top < window.innerHeight);
 }
 
 function syncBubbleVisibility(root:HTMLDivElement|null) {
   const bubble = root?.querySelector<HTMLElement>('.pet-bubble');
   if (!root || !bubble) return;
-  root.setAttribute('data-bubble-clear', String(canPlaceBubble(bubble.getBoundingClientRect(),controlBounds(),document.documentElement.clientWidth,window.innerHeight)));
+  root.setAttribute('data-bubble-clear', String(canPlaceBubble(bubble.getBoundingClientRect(),controlBounds(true),document.documentElement.clientWidth,window.innerHeight)));
 }
 
 export function Mascot() {

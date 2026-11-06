@@ -1,6 +1,6 @@
 .mascot{position:fixed;z-index:35;left:0;bottom:calc(var(--pet-bottom,9px) + env(safe-area-inset-bottom));width:122px;height:140px;transform:translate3d(var(--pet-x,18px),0,0);pointer-events:none;isolation:isolate}
 .pet-button{position:relative;display:block;width:100%;height:100%;padding:0;border:0;background:transparent;cursor:pointer;pointer-events:auto;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
-.cat-idle{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;z-index:2;filter:drop-shadow(0 6px 13px #0005);transition:opacity .09s}
+.cat-idle{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;z-index:2;filter:drop-shadow(0 6px 13px #0005)}
 .cat-walk{position:absolute;left:0;top:7%;width:100%;aspect-ratio:1;background-size:200% 200%;background-repeat:no-repeat;opacity:0;z-index:2}
 .cat-shadow{position:absolute;bottom:1%;left:17%;width:65%;height:9%;background:#0509127a;filter:blur(6px);border-radius:50%;z-index:1}
 .mascot.is-walking .cat-idle{opacity:0}
