@@ -1,9 +1,20 @@
-export function ProjectVisual({ id }: { id: string }) {
-  return <div className={`project-visual visual-${id}`} aria-hidden="true">
-    {id === 'bookstore' && <div className="bookstore-preview"><div className="mini-browser"><i /><i /><i /><span>bookstore.app</span></div><div className="bookstore-header"><b>BookStore<span>®</span></b><span>Find your next story.</span></div><div className="books"><span>THE<br />CREATIVE<br />MIND<i>01 — EDITION</i></span><span>MAKE<br />IT<br />HAPPEN<i>02 — EDITION</i></span><span>LESS,<br />BUT<br />BETTER<i>03 — EDITION</i></span></div></div>}
-    {id === 'norvis' && <div className="norvis-preview"><span className="preview-small">LOCAL INTELLIGENCE</span><div className="voice-wave">{Array.from({ length: 25 }, (_, index) => <i key={index} style={{ height: `${18 + Math.sin(index * 1.7) ** 2 * (58 - Math.abs(12 - index) * 3)}px` }} />)}</div><strong>NORVIS<span>●</span></strong><span className="preview-small">YOUR VOICE. YOUR MACHINE.</span></div>}
-    {id === 'splitbill' && <div className="splitbill-preview"><span className="preview-small">XYZEN / SPLIT BILL</span><div className="split-total">1 200 <small>сом</small></div><div className="split-people"><span>А</span><i /><span>Б</span><i /><span>В</span></div><span className="split-caption">Общий счёт. Простой расчёт.</span></div>}
-    {id === 'chess' && <div className="chess-preview"><div className="chess-board">{Array.from({ length: 16 }, (_, index) => <span key={index} className={(Math.floor(index / 4) + index) % 2 ? 'square-dark' : ''}>{({ 1: '♜', 4: '♞', 10: '♟', 15: '♔' } as Record<number, string>)[index]}</span>)}</div><span className="preview-small">YOUR NEXT MOVE.</span></div>}
-    {id === 'alhuda' && <div className="alhuda-preview"><span className="alhuda-star">✳</span><strong>Al Huda</strong><span className="preview-small">A LITTLE SPACE FOR FOCUS.</span><div className="alhuda-line" /></div>}
+import type { PointerEvent } from 'react';
+import type { Project } from '../data/resume';
+
+function tilt(event: PointerEvent<HTMLDivElement>) {
+  if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const bounds = event.currentTarget.getBoundingClientRect();
+  event.currentTarget.style.setProperty('--tilt-x', String((event.clientX - bounds.left) / bounds.width - .5));
+  event.currentTarget.style.setProperty('--tilt-y', String((event.clientY - bounds.top) / bounds.height - .5));
+}
+
+export function ProjectVisual({ id }: { id: Project['id'] }) {
+  return <div className={'project-visual visual-' + id} aria-hidden="true" onPointerMove={tilt} onPointerLeave={event => { event.currentTarget.style.setProperty('--tilt-x', '0'); event.currentTarget.style.setProperty('--tilt-y', '0'); }}>
+    <div className="cover-depth">
+      {id === 'music' && <><div className="music-disc"><i /><i /><i /></div><div className="music-poster"><span>Thunder</span><span>bend<span className="music-dot">.</span></span></div><div className="music-wave">{Array.from({ length: 31 }, (_, i) => <i key={i} style={{ height: String(12 + Math.sin(i * .85) ** 2 * 40) + 'px' }} />)}</div><span className="cover-footnote">Музыкальный сайт</span></>}
+      {id === 'ads' && <><div className="ads-ring" /><div className="ads-paper ads-paper-back" /><div className="ads-paper ads-paper-front"><span className="ads-star">✳</span><strong>Доска<br />объявлений</strong><span className="ads-paper-line" /></div><div className="ads-tag"><span /><i /></div><span className="cover-footnote">Веб-приложение</span></>}
+      {id === 'bookstore' && <><span className="book-background-word">books</span><div className="book-object book-one"><span>Book<br />Store<span className="book-symbol">✳</span></span></div><div className="book-object book-two"><span>Book<br />Store</span></div><span className="cover-footnote">Курсовая работа</span></>}
+      {id === 'aihuda' && <><div className="huda-arch huda-arch-one" /><div className="huda-arch huda-arch-two" /><div className="huda-arch huda-arch-three" /><span className="huda-star">✧</span><strong className="huda-word">Ai Huda</strong><span className="huda-caption">Чтение Корана</span><span className="cover-footnote">Приложение в разработке</span></>}
+    </div>
   </div>;
 }

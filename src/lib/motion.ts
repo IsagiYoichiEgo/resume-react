@@ -16,3 +16,19 @@ export function petPosition(progress: number, viewportWidth: number, petWidth: n
 export function canShowBubble(now: number, lastAt: number, lastSection: string, nextSection: string): boolean {
   return nextSection.length > 0 && nextSection !== lastSection && now - lastAt >= 6000;
 }
+
+
+type ControlBounds = {left:number;right:number;top:number;bottom:number};
+
+// Keep the companion near the right edge and lift it above visible controls.
+export function safePetPlacement(progress:number, width:number, height:number, petWidth:number, petHeight:number, controls:ControlBounds[], reduced:boolean) {
+  const x = petPosition(reduced ? 1 : .8 + .2 * progress, width, petWidth, 18);
+  let bottom = 9;
+  const maximum = Math.max(9, height - petHeight - 12);
+  for (const control of [...controls].sort((a,b) => b.top-a.top)) {
+    if (control.right > x-10 && control.left < x+petWidth+10 && control.bottom > height-bottom-petHeight-10 && control.top < height-bottom+10) {
+      bottom = Math.min(maximum, Math.max(bottom, height-control.top+10));
+    }
+  }
+  return {x,bottom};
+}

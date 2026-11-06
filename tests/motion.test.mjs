@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { scrollProgress, petPosition, canShowBubble } from '../src/lib/motion.ts';
+import { scrollProgress, petPosition, canShowBubble, safePetPlacement } from '../src/lib/motion.ts';
 
 test('scroll progress reaches the end of the readable page', () => {
   assert.equal(scrollProgress(600, 2000, 800), 0.5);
@@ -33,4 +33,21 @@ test('context messages wait and do not repeat for the same section', () => {
   assert.equal(canShowBubble(12000, 0, 'projects', 'projects'), false);
   assert.equal(canShowBubble(12000, 0, 'home', ''), false);
   assert.equal(canShowBubble(100, 1000, 'home', 'projects'), false);
+});
+
+
+test('the companion starts away from the desktop project button', () => {
+  const p = safePetPlacement(0, 1265, 720, 122, 140, [{left:56,right:270,top:600,bottom:660}], false);
+  assert.ok(p.x > 900);
+  assert.equal(p.bottom, 9);
+});
+
+test('the companion moves above a full-width mobile action', () => {
+  const p = safePetPlacement(.5,390,844,94,105,[{left:24,right:366,top:740,bottom:796}],false);
+  assert.ok(844-p.bottom <= 730);
+  assert.ok(p.x>=18 && p.x+94<=372);
+});
+
+test('reduced motion keeps the companion in one place while scrolling', () => {
+  assert.deepEqual(safePetPlacement(0,390,844,94,105,[],true), safePetPlacement(1,390,844,94,105,[],true));
 });

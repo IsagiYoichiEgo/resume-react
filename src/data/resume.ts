@@ -1,92 +1,52 @@
-export type ProjectCategory = 'web' | 'ai' | 'concept';
-
 export interface Project {
-  id: string;
-  number: string;
+  id: 'music' | 'ads' | 'bookstore' | 'aihuda';
   title: string;
-  category: ProjectCategory;
   kind: string;
   status: string;
   description: string;
   stack: string[];
-  features: string[];
-  flow: string[];
+  details: string[];
+  note: string;
+  liveUrl?: string;
+  sourceUrl?: string;
 }
 
-// Content comes from the previous résumé. Edit your profile in this file.
 export const profile = {
-  firstName: 'Аброрбек',
-  lastName: 'Алимжанов',
-  latinName: 'Abrorbek Alimjanov',
-  role: 'Junior Fullstack Developer',
-  location: 'Бишкек, Кыргызстан',
-  phone: '+996 228 936 151',
-  phoneLink: '+996228936151',
-  whatsapp: 'https://wa.me/996228936151',
-  github: 'https://github.com/IsagiYoichiEgo',
-  githubUsername: 'IsagiYoichiEgo',
-  university: 'INAI',
-  universityFull: 'Кыргызско-Германский институт прикладной информатики',
-  degree: 'Прикладная информатика',
-  educationPeriod: '2024 — настоящее время',
-  bio: 'Учусь в INAI, разрабатываю веб-приложения и изучаю локальный искусственный интеллект. Мне интересно, как соединить понятный интерфейс, продуманный backend и полезную автоматизацию в одном продукте.',
-  focus: 'Spring Boot · React · Local AI',
+  firstName: 'Аброрбек', lastName: 'Алимжанов', latinName: 'Abrorbek Alimjanov', brand: 'alimbro',
+  location: 'Бишкек, Кыргызстан', phone: '+996 228 936 151', phoneLink: '+996228936151',
+  whatsapp: 'https://wa.me/996228936151', github: 'https://github.com/IsagiYoichiEgo',
+  githubUsername: 'IsagiYoichiEgo', university: 'INAI',
 };
-
-export const skillGroups = [
-  { name: 'Frontend', description: 'Интерфейсы, с которыми удобно работать.', skills: ['React', 'JavaScript', 'TypeScript', 'HTML / CSS', 'Next.js'] },
-  { name: 'Backend & Data', description: 'Логика приложения и работа с данными.', skills: ['Java', 'Spring Boot', 'REST API', 'PostgreSQL', 'SQLite'] },
-  { name: 'AI & Tools', description: 'Автоматизация и инструменты разработчика.', skills: ['Python', 'Ollama / Qwen2.5', 'Git / GitHub', 'Linux / WSL2', 'Cisco Packet Tracer'] },
-];
 
 export const projects: Project[] = [
   {
-    id: 'bookstore', number: '01', title: 'BookStore', category: 'web', kind: 'Fullstack / Web', status: 'Завершён',
-    description: 'Веб-приложение книжного магазина: каталог, поиск, корзина и авторизация. От интерфейса до базы данных.',
-    stack: ['Spring Boot', 'React', 'PostgreSQL', 'JWT'],
-    features: ['Каталог книг с поиском и категориями.', 'Корзина и оформление заказа.', 'Авторизация на основе JWT.', 'Backend с разделением Controller, Service и Repository.'],
-    flow: ['React interface', 'REST API / Spring Boot', 'JPA / PostgreSQL'],
+    id: 'music', title: 'Thunder bend', kind: 'Музыкальный сайт', status: 'Опубликован',
+    description: 'Концертная атмосфера и рабочий профиль музыканта. Учебный сайт музыкальной группы.',
+    stack: ['React', 'TypeScript', 'API'],
+    details: ['Главная страница музыкальной группы.', 'Регистрация, вход и выход из аккаунта.', 'Просмотр и редактирование профиля музыканта.'],
+    note: 'Учебный проект. Концертное изображение — иллюстрация, а не фотография реальной группы.',
+    liveUrl: 'https://isagiyoichiego.github.io/music/', sourceUrl: 'https://github.com/IsagiYoichiEgo/music',
   },
   {
-    id: 'norvis', number: '02', title: 'NORVIS', category: 'ai', kind: 'AI / Automation', status: 'В разработке',
-    description: 'Локальный голосовой помощник. Эксперименты с языковой моделью, распознаванием речи и автоматизацией задач.',
-    stack: ['Python', 'Ollama', 'Qwen2.5', 'SpeechRecognition'],
-    features: ['Запуск локальной модели через Ollama.', 'Обработка голосовых команд.', 'Автоматизация действий в операционной системе.', 'Эксперименты с голосовым ответом.'],
-    flow: ['Голосовая команда', 'Python / обработка запроса', 'Ollama или действие в ОС'],
+    id: 'ads', title: 'Доска объявлений', kind: 'Веб-приложение', status: 'Опубликован',
+    description: 'Учебное приложение с объявлениями, загрузкой данных с API и переходом между страницами.',
+    stack: ['React', 'TypeScript', 'API'],
+    details: ['Лента объявлений с учебного сервера.', 'Просмотр информации об объявлениях.', 'Пагинация для перехода между страницами.'],
+    note: 'Учебный проект с общим сервером. Данные в ленте добавляют участники учебного курса.',
+    liveUrl: 'https://isagiyoichiego.github.io/ads-board-react-/', sourceUrl: 'https://github.com/IsagiYoichiEgo/ads-board-react-',
   },
   {
-    id: 'splitbill', number: '03', title: 'Split Bill', category: 'concept', kind: 'Fintech / Concept', status: 'Концепция',
-    description: 'Концепция для Xyzen Neobank: совместные расходы и расчёт взаимных долгов без лишних переводов.',
-    stack: ['System Design', 'Graph Algorithms', 'Fintech UX'],
-    features: ['Учёт участников и совместных расходов.', 'Расчёт итогового баланса каждого участника.', 'Упрощение взаимных долгов.', 'Проектирование пользовательского сценария.'],
-    flow: ['Общие расходы', 'Баланс участников', 'Оптимизированные переводы'],
+    id: 'bookstore', title: 'BookStore', kind: 'Курсовая работа', status: 'Готов · локальный запуск',
+    description: 'Интернет-магазин книг с базой данных. Завершённая курсовая работа с локальным запуском.',
+    stack: ['Веб-приложение', 'База данных'],
+    details: ['Интернет-магазин книг.', 'Работа с базой данных.', 'Готовая курсовая работа, которая запускается локально.'],
+    note: 'Публичного демо пока нет. Здесь можно прочитать краткое описание работы.',
   },
   {
-    id: 'chess', number: '04', title: 'Chess + AI', category: 'ai', kind: 'Game / Algorithms', status: 'Игровой проект',
-    description: 'Шахматы с компьютерным соперником. Игровая логика, оценка позиции и поиск следующего хода.',
-    stack: ['JavaScript', 'Canvas', 'Minimax', 'Alpha-Beta'],
-    features: ['Проверка допустимых ходов.', 'Поиск хода алгоритмом Minimax.', 'Отсечение ветвей методом Alpha-Beta.', 'Оценка фигур и позиции на доске.'],
-    flow: ['Состояние доски', 'Поиск и оценка ходов', 'Ход компьютерного соперника'],
-  },
-  {
-    id: 'alhuda', number: '05', title: 'Al Huda', category: 'web', kind: 'Personal / Web', status: 'В разработке',
-    description: 'Личный проект с лаконичным интерфейсом, полезными ресурсами и инструментами духовной продуктивности.',
-    stack: ['React / Next.js', 'CSS', 'REST API', 'Local Storage'],
-    features: ['Лаконичный адаптивный интерфейс.', 'Работа с расписанием и уведомлениями.', 'Локальное хранение пользовательских данных.', 'Развитие функций личной продуктивности.'],
-    flow: ['Пользовательский интерфейс', 'Данные и расписание', 'Локальное хранение'],
+    id: 'aihuda', title: 'Ai Huda', kind: 'Приложение', status: 'В разработке',
+    description: 'Личный проект приложения для чтения Корана. Работаю над интерфейсом и удобством чтения.',
+    stack: ['Чтение Корана', 'Личный проект'],
+    details: ['Приложение для чтения Корана.', 'Проект находится в разработке.', 'Внимание к читаемости и удобству интерфейса.'],
+    note: 'Приложение ещё не выпущено. Ссылка на скачивание появится после готового релиза.',
   },
 ];
-
-export const languages = [
-  { name: 'Русский', level: 'Свободно', code: 'RU' },
-  { name: 'Кыргызский', level: 'Родной', code: 'KG' },
-  { name: 'Английский', level: 'B1 / B2', code: 'EN' },
-  { name: 'Немецкий', level: 'A1 / A2', code: 'DE' },
-];
-
-export const interests = [
-  { name: 'Шахматы', description: 'Стратегия, расчёт и спокойствие под давлением.', icon: 'chess' },
-  { name: 'Видеомонтаж', description: 'Короткие видео, визуальный ритм и motion design.', icon: 'film' },
-  { name: 'Теннис', description: 'Реакция, концентрация и движение.', icon: 'activity' },
-  { name: 'Хакатоны', description: 'Командная работа и быстрые прототипы идей.', icon: 'code' },
-] as const;

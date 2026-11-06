@@ -1,0 +1,22 @@
+.mascot{position:fixed;z-index:35;left:0;bottom:calc(var(--pet-bottom,9px) + env(safe-area-inset-bottom));width:122px;height:140px;transform:translate3d(var(--pet-x,18px),0,0);pointer-events:none;isolation:isolate}
+.pet-button{position:relative;display:block;width:100%;height:100%;padding:0;border:0;background:transparent;cursor:pointer;pointer-events:auto;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.cat-idle{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;z-index:2;filter:drop-shadow(0 6px 13px #0005);transition:opacity .09s}
+.cat-walk{position:absolute;left:0;top:7%;width:100%;aspect-ratio:1;background-size:200% 200%;background-repeat:no-repeat;opacity:0;z-index:2}
+.cat-shadow{position:absolute;bottom:1%;left:17%;width:65%;height:9%;background:#0509127a;filter:blur(6px);border-radius:50%;z-index:1}
+.mascot.is-walking .cat-idle{opacity:0}
+.mascot.is-walking .cat-walk{opacity:1;animation:cat-steps .62s steps(1,end) infinite}
+.mascot[data-direction="left"] .cat-walk{transform:scaleX(-1)}
+.mascot.is-happy .pet-button{animation:cat-happy .58s cubic-bezier(.2,.8,.2,1)}
+.pet-hide{position:absolute;right:-5px;top:12px;z-index:4;width:30px;height:30px;display:grid;place-items:center;border:1px solid #aab4c74d;border-radius:50%;background:#121c31e8;color:#f6f3ec;font:20px/1 "Golos Text",sans-serif;cursor:pointer;pointer-events:auto;opacity:.7}
+.pet-hide:hover{opacity:1;background:#26354d}
+.pet-bubble{position:absolute;left:var(--bubble-x,0px);bottom:calc(100% + 5px);display:flex;align-items:center;gap:10px;width:min(220px,calc(100vw - 32px));padding:13px 10px 13px 16px;border:1px solid #fff8;border-radius:18px 18px 18px 6px;box-shadow:0 12px 36px #0004;background:#f6f3ec;color:#152033;font:500 13px/1.45 "Golos Text",sans-serif;pointer-events:auto}
+.pet-bubble::after{content:"";position:absolute;left:clamp(18px,calc(55px - var(--bubble-x,0px)),196px);bottom:-6px;width:11px;height:11px;background:#f6f3ec;transform:rotate(45deg)}
+.pet-bubble button{flex-shrink:0;align-self:flex-start;display:grid;place-items:center;width:28px;height:28px;padding:0;border:0;border-radius:50%;background:#1520330d;color:#152033;font:22px/1 sans-serif;cursor:pointer}
+.pet-restore{position:fixed;right:18px;bottom:calc(18px + env(safe-area-inset-bottom));z-index:35;display:grid;place-items:center;width:48px;height:48px;border:1px solid #7de6d159;border-radius:50%;background:#121c31ed;box-shadow:0 6px 20px #0003;font-size:23px;cursor:pointer}
+.pet-button:focus-visible,.pet-hide:focus-visible,.pet-bubble button:focus-visible,.pet-restore:focus-visible{outline:3px solid #7de6d1;outline-offset:4px;border-radius:16px}
+body:has(dialog[open]) .mascot,body:has(dialog[open]) .pet-restore{visibility:hidden}
+@keyframes cat-steps{0%{background-position:0 0}25%{background-position:100% 0}50%{background-position:0 100%}75%{background-position:100% 100%}100%{background-position:0 0}}
+@keyframes cat-happy{0%,100%{transform:translateY(0) rotate(0)}35%{transform:translateY(-15px) rotate(-6deg)}68%{transform:translateY(-5px) rotate(4deg)}}
+@media(max-width:599px){.mascot{width:94px;height:105px}.pet-hide{top:0;width:30px;height:30px}.pet-bubble{font-size:12px;padding:11px 8px 11px 13px}}
+@media(prefers-reduced-motion:reduce){.mascot *{animation:none!important;transition:none!important}.mascot .cat-idle{opacity:1!important}.mascot .cat-walk{opacity:0!important}}
+@media print{.mascot,.pet-restore{display:none!important}}
