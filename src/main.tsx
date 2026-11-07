@@ -7,5 +7,6 @@ import '@fontsource/unbounded/600.css';
 import App from './App';
 import './styles.css';
 import './components/ambient-light.css';
+import './components/reveal.css';
 
 createRoot(document.getElementById('root')!).render(<StrictMode><App /></StrictMode>);

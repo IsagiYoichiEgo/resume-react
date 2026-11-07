@@ -16,7 +16,7 @@ export function Showcase() {
   const [selected,setSelected] = useState<ShowcaseId>('music');
   const project = showcase[selected];
   const behind = showcase[selected === 'music' ? 'ads' : 'music'];
-  return <div className="showcase" data-project={selected}>
+  return <div className="showcase" data-project={selected} data-reveal data-reveal-delay="2">
     <div className="showcase-canvas" aria-hidden="true" onPointerMove={move} onPointerLeave={event=>{event.currentTarget.style.setProperty('--pointer-x','0');event.currentTarget.style.setProperty('--pointer-y','0');}}>
       <div className="showcase-grid"/><div className="showcase-halo"/><div className="showcase-orbit"/><div className="showcase-orbit orbit-second"/>
       <div className="showcase-depth">

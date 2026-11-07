@@ -1,0 +1,33 @@
+/* Reveal only outer content layers; nested gradients and 3D transforms stay independent. */
+[data-reveal-state] {
+  opacity: 1;
+  transform: none;
+  transition: opacity 780ms cubic-bezier(.2,.65,.25,1), transform 780ms cubic-bezier(.2,.65,.25,1);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+[data-reveal-delay="1"] { --reveal-delay: 80ms; }
+[data-reveal-delay="2"] { --reveal-delay: 160ms; }
+[data-reveal-delay="3"] { --reveal-delay: 240ms; }
+[data-reveal-state="pending"] {
+  opacity: 0;
+  transform: translate3d(0, 24px, 0);
+  pointer-events: none;
+}
+[data-reveal-immediate], [data-reveal-state]:focus-within {
+  opacity: 1;
+  transform: none;
+  transition: none;
+  pointer-events: auto;
+}
+/* Each mobile card/step enters on its own; no waiting for an offscreen sibling. */
+@media (max-width: 650px) {
+  .project-card[data-reveal], .workflow-steps [data-reveal] { --reveal-delay: 0ms; }
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal-state] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+    pointer-events: auto;
+  }
+}

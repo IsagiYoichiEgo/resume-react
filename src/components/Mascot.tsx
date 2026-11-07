@@ -100,7 +100,7 @@ export function Mascot() {
   }, [visible, reduced]);
 
   useEffect(() => {
-    if (!visible || reduced) return;
+    if (!visible || reduced || typeof IntersectionObserver === 'undefined') return;
     const observer = new IntersectionObserver(entries => {
       if (document.querySelector('dialog[open]')) return;
       const entry = entries.find(item => item.isIntersecting && sectionMessages[item.target.id]);

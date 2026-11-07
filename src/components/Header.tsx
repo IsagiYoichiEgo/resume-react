@@ -11,6 +11,7 @@ export function Header() {
   const toggle = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
+    if (typeof IntersectionObserver === 'undefined') return;
     const observer = new IntersectionObserver(entries => {
       for (const entry of entries) if (entry.isIntersecting) setActive(entry.target.id);
     }, { rootMargin: '-15% 0px -65% 0px' });
@@ -32,7 +33,7 @@ export function Header() {
   }, [open]);
 
   return <header className="site-header" ref={header}>
-    <div className="header-inner container">
+    <div className="header-inner container" data-reveal>
       <a className="brand" href="#home" aria-label="alimbro — Аброрбек Алимжанов, начало" onClick={() => setOpen(false)}><span className="brand-word light-text">alimbro</span><span className="brand-dot">.</span></a>
       <nav id="main-navigation" className={'navigation ' + (open ? 'is-open' : '')} aria-label="Основная навигация">
         {navigation.map(item => <a key={item.id} href={'#' + item.id} aria-current={active === item.id ? 'location' : undefined} onClick={() => setOpen(false)}>{item.label}</a>)}
