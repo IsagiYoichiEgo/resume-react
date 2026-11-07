@@ -1,8 +1,8 @@
-/* Low-contrast light passes with long rests; the text itself never fades. */
+/* Wider mint/pearl light passes with long rests; the text itself never fades. */
 .light-text { color: var(--cream); }
 @supports (background-clip: text) or (-webkit-background-clip: text) {
   .light-text, .brand .brand-word {
-    background-image: linear-gradient(108deg, #f6f3ec 0%, #f6f3ec 38%, #d9f9ed 44%, #91e5d3 48%, #fffdf5 51%, #e7dbf6 54%, #f6f3ec 61%, #f6f3ec 100%);
+    background-image: linear-gradient(108deg, #f6f3ec 0%, #f6f3ec 32%, #c5f8e9 39%, #64e4c5 45%, #ffffff 51%, #cbbbef 57%, #f6f3ec 68%, #f6f3ec 100%);
     background-size: 270% 100%;
     background-position: 100% 50%;
     background-repeat: no-repeat;
@@ -30,12 +30,12 @@
 .header-contact svg { transition: transform .3s ease; }
 .header-contact:hover svg, .header-contact:focus-visible svg { transform: translate(2px,-2px); }
 
-@keyframes gentle-text-light { 0%,15% { background-position: 100% 50%; } 48%,100% { background-position: 0% 50%; } }
+@keyframes gentle-text-light { 0%,15% { background-position: 100% 50%; filter: drop-shadow(0 0 0 #7de6d100); } 30%,42% { filter: drop-shadow(0 0 7px #7de6d138); } 58%,100% { background-position: 0% 50%; filter: drop-shadow(0 0 0 #7de6d100); } }
 @keyframes brand-lantern { 0%,48%,100% { text-shadow: 0 0 0 #7de6d100; } 22% { text-shadow: 0 0 12px #7de6d173, 0 0 4px #7de6d136; } }
 @keyframes contact-orbit { 0%,27% { transform: rotate(0deg); } 77%,100% { transform: rotate(360deg); } }
 
 @media (prefers-reduced-motion: reduce) {
-  .light-text, .brand .brand-word { animation: none; background: none; color: var(--cream); -webkit-text-fill-color: currentColor; }
+  .light-text, .brand .brand-word { animation: none; filter: none; background: none; color: var(--cream); -webkit-text-fill-color: currentColor; }
   .site-header .brand-dot { animation: none; text-shadow: none; }
   .contact-light::before { animation: none; background: linear-gradient(115deg,#ffffff20,#7de6d166,#ffffff20); }
   .header-contact, .header-contact svg, #projects-title .heading-mark { transition: none; }
