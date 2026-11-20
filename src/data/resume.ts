@@ -25,7 +25,7 @@ export const projects: Project[] = [
     stack: ['HTML', 'CSS', 'JavaScript', 'Web Audio'],
     details: ['Четыре плейлиста-настроения, у каждого свой темп и цвет.', 'Треки синтезируются через Web Audio API, без аудиофайлов.', 'Визуализатор-кольцо реагирует на настоящий звук.', 'Инерционный курсор и стеклянный интерфейс на чистом CSS.'],
     note: 'Концепт-проект. Исполнители и треки вымышленные.',
-    liveUrl: 'https://isagiyoichiego.github.io/resume-react/xyzen/', sourceUrl: 'https://github.com/IsagiYoichiEgo/resume-react/tree/main/public/xyzen',
+    liveUrl: 'https://isagiyoichiego.github.io/xyzen-music/', sourceUrl: 'https://github.com/IsagiYoichiEgo/xyzen-music',
   },
   {
     id: 'music', title: 'Thunder bend', kind: 'Музыкальный сайт', status: 'Опубликован',
