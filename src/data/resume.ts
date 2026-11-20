@@ -1,5 +1,5 @@
 export interface Project {
-  id: 'music' | 'ads' | 'bookstore' | 'aihuda';
+  id: 'xyzen' | 'music' | 'ads' | 'bookstore' | 'aihuda';
   title: string;
   kind: string;
   status: string;
@@ -19,6 +19,14 @@ export const profile = {
 };
 
 export const projects: Project[] = [
+  {
+    id: 'xyzen', title: 'XYZEN Music', kind: 'Музыкальный плеер', status: 'Опубликован',
+    description: 'Тёмный музыкальный плеер со стеклянным интерфейсом. Музыка генерируется прямо в браузере, а визуализатор реагирует на звук.',
+    stack: ['HTML', 'CSS', 'JavaScript', 'Web Audio'],
+    details: ['Четыре плейлиста-настроения, у каждого свой темп и цвет.', 'Треки синтезируются через Web Audio API, без аудиофайлов.', 'Визуализатор-кольцо реагирует на настоящий звук.', 'Инерционный курсор и стеклянный интерфейс на чистом CSS.'],
+    note: 'Концепт-проект. Исполнители и треки вымышленные.',
+    liveUrl: 'https://isagiyoichiego.github.io/xyzen-music/', sourceUrl: 'https://github.com/IsagiYoichiEgo/xyzen-music',
+  },
   {
     id: 'music', title: 'Thunder bend', kind: 'Музыкальный сайт', status: 'Опубликован',
     description: 'Концертная атмосфера и рабочий профиль музыканта. Учебный сайт музыкальной группы.',

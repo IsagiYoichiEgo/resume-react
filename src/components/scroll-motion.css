@@ -1,0 +1,61 @@
+/* Featured project: XYZEN spans the full row. */
+.project-card-xyzen{grid-column:1/-1}
+.project-card-xyzen .project-visual{aspect-ratio:2.3}
+.project-card-xyzen .project-info{display:grid;grid-template-columns:1fr 1fr;column-gap:64px;align-items:start}
+.project-card-xyzen .project-topline,.project-card-xyzen h3{grid-column:1}
+.project-card-xyzen .project-info>p{grid-column:2;grid-row:1/span 2;margin-top:0;max-width:520px}
+.project-card-xyzen .project-bottom{grid-column:1/-1;margin-top:8px}
+.visual-xyzen{background:radial-gradient(ellipse at 15% 10%,#ff5e7a99,transparent 50%),radial-gradient(ellipse at 90% 80%,#b9a7ff80,transparent 55%),#1b1530}
+.visual-xyzen .project-screen{left:7%;top:12%;width:47%;transform:translateY(calc(var(--view-depth,0)*22px)) rotate(-4deg) translateZ(25px)}
+.visual-xyzen .project-mobile{left:66%;top:10%;width:13%;transform:translateY(calc(var(--view-depth,0)*-34px)) rotate(7deg) translateZ(65px)}
+.visual-xyzen .project-screen-spark{left:auto;right:4%;top:4%;color:#ffc46b}
+.visual-xyzen .cover-footnote{font-size:10px;bottom:15px;color:#f2eefbc9}
+.project-card-music{margin-top:0}
+@media(max-width:900px){.project-card-xyzen .project-visual{aspect-ratio:1.9}.project-card-xyzen .project-info{column-gap:32px}}
+@media(max-width:650px){
+  .project-card-xyzen .project-visual{aspect-ratio:1.3}
+  .project-card-xyzen .project-info{display:block}
+  .project-card-xyzen .project-info>p{margin:9px 0 22px}
+  .visual-xyzen .project-screen{left:4%;top:21%;width:85%}
+  .visual-xyzen .project-mobile{left:69%;top:31%;width:24%}
+}
+
+/* Project covers open like a curtain and settle from a slight zoom. */
+.project-card[data-reveal-state="visible"]:not([data-reveal-immediate]) .project-visual{animation:cover-wipe 1.15s cubic-bezier(.75,0,.2,1) var(--reveal-delay,0ms) backwards}
+.project-card[data-reveal-state="visible"]:not([data-reveal-immediate]) .cover-depth{animation:cover-zoom 1.6s cubic-bezier(.2,.7,.2,1) var(--reveal-delay,0ms) backwards}
+.project-card[data-reveal-state="visible"]:not([data-reveal-immediate]) .project-info{animation:info-rise .9s cubic-bezier(.2,.7,.2,1) calc(var(--reveal-delay,0ms) + 350ms) backwards}
+@keyframes cover-wipe{from{clip-path:inset(100% 0 0 0 round 22px)}to{clip-path:inset(0 0 0 0 round 22px)}}
+@keyframes cover-zoom{from{transform:scale(1.22) rotate(-2deg)}}
+@keyframes info-rise{from{opacity:0;transform:translateY(18px)}}
+
+/* Section headings are drawn left to right. */
+[data-reveal-state="visible"]:not([data-reveal-immediate]) :is(.section-intro h2,.about-title h2,.workflow-heading h2,.contact-copy h2){animation:heading-wipe 1.1s cubic-bezier(.7,0,.2,1) var(--reveal-delay,0ms) backwards}
+@keyframes heading-wipe{from{clip-path:inset(-15% 100% -25% 0);transform:translateX(-14px)}to{clip-path:inset(-15% 0 -25% 0)}}
+
+/* Hero title rises out of its baseline on load. */
+.hero h1[data-reveal-state="visible"]:not([data-reveal-immediate]){animation:hero-rise 1.2s cubic-bezier(.2,.8,.2,1) backwards}
+@keyframes hero-rise{from{clip-path:inset(0 0 100% 0);transform:translateY(60px)}to{clip-path:inset(-10% -10% -20% -10%)}}
+
+/* About: the spark spins in, the text follows. */
+.about-title[data-reveal-state="visible"]:not([data-reveal-immediate]) .about-spark{animation:spark-in 1.4s cubic-bezier(.2,.8,.2,1) backwards}
+@keyframes spark-in{from{transform:rotate(-200deg) scale(.2);opacity:0}}
+
+/* Workflow: the line between steps draws as the steps arrive. */
+.workflow-steps:has(li[data-reveal-state])::before{transform:scaleX(0);transform-origin:left;transition:transform 1.6s .25s cubic-bezier(.6,0,.2,1)}
+.workflow-steps:has(li:last-child[data-reveal-state="visible"])::before{transform:scaleX(1)}
+.workflow-steps li[data-reveal-state="visible"]:not([data-reveal-immediate]) .workflow-number{animation:step-pop .7s cubic-bezier(.3,1.6,.5,1) calc(var(--reveal-delay,0ms) + 150ms) backwards}
+@keyframes step-pop{from{transform:scale(.3);opacity:0}}
+@media(max-width:650px){
+  .workflow-steps:has(li[data-reveal-state])::before{transform:scaleY(0);transform-origin:top}
+  .workflow-steps:has(li:last-child[data-reveal-state="visible"])::before{transform:scaleY(1)}
+}
+
+/* Contact panel: a soft light follows the pointer. */
+.contact-panel::before{content:'';position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .4s;background:radial-gradient(420px circle at var(--spot-x,50%) var(--spot-y,50%),#7de6d11f,transparent 65%)}
+.contact-panel:hover::before{opacity:1}
+.contact-panel>*{position:relative}
+
+@media(prefers-reduced-motion:reduce){
+  .project-visual,.cover-depth,.project-info,.hero h1,.about-spark,.workflow-number,[data-reveal-state] h2{animation:none!important}
+  .workflow-steps::before{transform:none!important;transition:none!important}
+}

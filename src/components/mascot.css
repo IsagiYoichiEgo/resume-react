@@ -1,12 +1,33 @@
 .mascot{position:fixed;z-index:35;left:0;bottom:calc(var(--pet-bottom,9px) + env(safe-area-inset-bottom));width:122px;height:140px;transform:translate3d(var(--pet-x,18px),0,0);pointer-events:none;isolation:isolate}
 .pet-button{position:relative;display:block;width:100%;height:100%;padding:0;border:0;background:transparent;cursor:pointer;pointer-events:auto;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
-.cat-idle{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;z-index:2;filter:drop-shadow(0 6px 13px #0005)}
-.cat-walk{position:absolute;left:0;top:7%;width:100%;aspect-ratio:1;background-size:200% 200%;background-repeat:no-repeat;opacity:0;z-index:2}
-.cat-shadow{position:absolute;bottom:1%;left:17%;width:65%;height:9%;background:#0509127a;filter:blur(6px);border-radius:50%;z-index:1}
-.mascot.is-walking .cat-idle{opacity:0}
-.mascot.is-walking .cat-walk{opacity:1;animation:cat-steps .62s steps(1,end) infinite}
-.mascot[data-direction="left"] .cat-walk{transform:scaleX(-1)}
+.cat-svg{position:absolute;inset:0;z-index:2;width:100%;height:100%;overflow:visible;filter:drop-shadow(0 8px 14px #0006)}
+.cat-svg g{transform-box:fill-box}
+.cat-shadow{position:absolute;bottom:1%;left:20%;width:60%;height:8%;background:#0509127a;filter:blur(6px);border-radius:50%;z-index:1;animation:cat-shadow 4.2s ease-in-out infinite}
+/* idle: breathing, tail sway, ear twitch, blink */
+.cat-body{transform-origin:50% 100%;animation:cat-breathe 4.2s ease-in-out infinite}
+.cat-head{transform-origin:50% 90%;transform:translate(calc(var(--look-x,0)*2.5px),calc(var(--look-y,0)*1.5px)) rotate(calc(var(--look-x,0)*5deg));transition:transform .35s cubic-bezier(.2,.8,.2,1)}
+.cat-head>*{animation:cat-head-bob 4.2s ease-in-out infinite}
+.cat-tail{transform-origin:0% 100%;animation:cat-tail 3.2s ease-in-out infinite}
+.cat-ear-left{transform-origin:70% 90%;animation:cat-ear 7s ease-in-out infinite}
+.cat-ear-right{transform-origin:30% 90%;animation:cat-ear 9s 2.4s ease-in-out infinite}
+.cat-eye-open{transform-origin:50% 55%;animation:cat-blink 5.5s infinite}
+.cat-pupils{transform:translate(calc(var(--look-x,0)*3.4px),calc(var(--look-y,0)*2.6px));transition:transform .25s ease-out}
+.cat-eye-happy{opacity:0}
+.cat-hearts{opacity:0;transform-origin:50% 100%}
+/* walking while the page scrolls */
+.mascot.is-walking .pet-button{animation:cat-hop .36s ease-in-out infinite}
+.mascot.is-walking .cat-paw-left{animation:cat-step .36s ease-in-out infinite}
+.mascot.is-walking .cat-paw-right{animation:cat-step .36s .18s ease-in-out infinite}
+.mascot.is-walking .cat-tail{animation-duration:.72s}
+.mascot[data-direction="left"] .cat-tail{animation-direction:reverse}
+/* happy after a pat */
 .mascot.is-happy .pet-button{animation:cat-happy .58s cubic-bezier(.2,.8,.2,1)}
+.mascot.is-happy .cat-eye-open{opacity:0;animation:none}
+.mascot.is-happy .cat-eye-happy{opacity:1}
+.mascot.is-happy .cat-hearts{animation:cat-hearts .9s ease-out}
+.mascot.is-happy .cat-blush{opacity:.8}
+.pet-button:hover .cat-ear-left{animation:cat-ear-quick .5s ease-in-out}
+.pet-button:hover .cat-ear-right{animation:cat-ear-quick .5s .1s ease-in-out}
 .pet-hide{position:absolute;right:-5px;top:12px;z-index:4;width:30px;height:30px;display:grid;place-items:center;border:1px solid #aab4c74d;border-radius:50%;background:#121c31e8;color:#f6f3ec;font:20px/1 "Golos Text",sans-serif;cursor:pointer;pointer-events:auto;opacity:.7}
 .pet-hide:hover{opacity:1;background:#26354d}
 .pet-bubble{position:absolute;left:var(--bubble-x,0px);bottom:calc(100% + 5px);display:flex;align-items:center;gap:10px;width:min(220px,calc(100vw - 32px));padding:13px 10px 13px 16px;border:1px solid #fff8;border-radius:18px 18px 18px 6px;box-shadow:0 12px 36px #0004;background:#f6f3ec;color:#152033;font:500 13px/1.45 "Golos Text",sans-serif;pointer-events:auto}
@@ -15,10 +36,19 @@
 .pet-restore{position:fixed;right:18px;bottom:calc(18px + env(safe-area-inset-bottom));z-index:35;display:grid;place-items:center;width:48px;height:48px;border:1px solid #7de6d159;border-radius:50%;background:#121c31ed;box-shadow:0 6px 20px #0003;font-size:23px;cursor:pointer}
 .pet-button:focus-visible,.pet-hide:focus-visible,.pet-bubble button:focus-visible,.pet-restore:focus-visible{outline:3px solid #7de6d1;outline-offset:4px;border-radius:16px}
 body:has(dialog[open]) .mascot,body:has(dialog[open]) .pet-restore{visibility:hidden}
-@keyframes cat-steps{0%{background-position:0 0}25%{background-position:100% 0}50%{background-position:0 100%}75%{background-position:100% 100%}100%{background-position:0 0}}
+@keyframes cat-breathe{0%,100%{transform:scale(1,1)}50%{transform:scale(1.025,.975)}}
+@keyframes cat-head-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(1.4px)}}
+@keyframes cat-shadow{0%,100%{transform:scaleX(1)}50%{transform:scaleX(1.05)}}
+@keyframes cat-tail{0%,100%{transform:rotate(-6deg)}50%{transform:rotate(10deg)}}
+@keyframes cat-ear{0%,90%,100%{transform:rotate(0)}93%{transform:rotate(-12deg)}96%{transform:rotate(4deg)}}
+@keyframes cat-ear-quick{0%,100%{transform:rotate(0)}40%{transform:rotate(-14deg)}75%{transform:rotate(5deg)}}
+@keyframes cat-blink{0%,93%,100%{transform:scaleY(1)}95.5%{transform:scaleY(.08)}}
+@keyframes cat-hop{0%,100%{transform:translateY(0) rotate(0)}25%{transform:translateY(-5px) rotate(-2deg)}75%{transform:translateY(-5px) rotate(2deg)}}
+@keyframes cat-step{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes cat-hearts{0%{opacity:0;transform:translateY(8px) scale(.6)}30%{opacity:1}100%{opacity:0;transform:translateY(-22px) scale(1.15)}}
 @keyframes cat-happy{0%,100%{transform:translateY(0) rotate(0)}35%{transform:translateY(-15px) rotate(-6deg)}68%{transform:translateY(-5px) rotate(4deg)}}
 @media(max-width:599px){.mascot{width:94px;height:105px}.pet-hide{top:0;width:30px;height:30px}.pet-bubble{font-size:12px;padding:11px 8px 11px 13px}}
-@media(prefers-reduced-motion:reduce){.mascot *{animation:none!important;transition:none!important}.mascot .cat-idle{opacity:1!important}.mascot .cat-walk{opacity:0!important}}
+@media(prefers-reduced-motion:reduce){.mascot *{animation:none!important;transition:none!important}}
 @media print{.mascot,.pet-restore{display:none!important}}
 
 .pet-bubble{visibility:hidden}

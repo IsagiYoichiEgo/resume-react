@@ -1,8 +1,8 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { canShowBubble, canPlaceBubble, safePetPlacement, scrollProgress } from '../lib/motion';
+import { CatSvg } from './CatSvg';
 import './mascot.css';
 
-const base = import.meta.env.BASE_URL;
 const sectionMessages: Record<string, string> = {
   home: 'Мур. Посмотрим проекты?',
   projects: 'Лапка за любопытство! 🐾',
@@ -30,7 +30,6 @@ export function Mascot() {
   const [visible, setVisible] = useState(() => { try { return localStorage.getItem('alimbro-cat') !== 'hidden'; } catch { return true; } });
   const [walking, setWalking] = useState(false);
   const [happy, setHappy] = useState(false);
-  const [spriteReady, setSpriteReady] = useState(false);
   const [bubble, setBubble] = useState('');
   const [reduced, setReduced] = useState(() => window.matchMedia('(prefers-reduced-motion: reduce)').matches);
 
@@ -40,12 +39,27 @@ export function Mascot() {
     bubbleTimer.current = setTimeout(() => setBubble(''), 4800);
   }
 
+  // Eyes follow the pointer: pupils shift toward the cursor, head tilts slightly.
   useEffect(() => {
-    const image = new Image();
-    image.onload = () => setSpriteReady(true);
-    image.src = base + 'assets/cat-walk.webp';
-    return () => { image.onload = null; };
-  }, []);
+    if (!visible || reduced || !window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+    let frame = 0;
+    const onMove = (event: PointerEvent) => {
+      if (frame) return;
+      frame = requestAnimationFrame(() => {
+        frame = 0;
+        const box = root.current?.getBoundingClientRect();
+        if (!box) return;
+        const dx = event.clientX - (box.left + box.width / 2);
+        const dy = event.clientY - (box.top + box.height * 0.35);
+        const length = Math.max(1, Math.hypot(dx, dy));
+        const pull = Math.min(1, length / 260);
+        root.current?.style.setProperty('--look-x', (dx / length * pull).toFixed(3));
+        root.current?.style.setProperty('--look-y', (dy / length * pull).toFixed(3));
+      });
+    };
+    window.addEventListener('pointermove', onMove, { passive: true });
+    return () => { cancelAnimationFrame(frame); window.removeEventListener('pointermove', onMove); };
+  }, [visible, reduced]);
 
   useEffect(() => {
     const media = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -130,7 +144,7 @@ export function Mascot() {
   }
 
   if (!visible) return <button className="pet-restore" onClick={() => toggle(true)} aria-label="Вернуть котика" title="Вернуть котика">🐾</button>;
-  const animateWalk = walking && spriteReady && !reduced;
+  const animateWalk = walking && !reduced;
   return <div ref={root} className={'mascot' + (animateWalk ? ' is-walking' : '') + (happy && !reduced ? ' is-happy' : '')} data-direction="right">
     {bubble && <div className="pet-bubble" role="status"><span>{bubble}</span><button onClick={() => setBubble('')} aria-label="Закрыть реплику котика">×</button></div>}
     <button className="pet-button" onClick={() => {
@@ -140,8 +154,7 @@ export function Mascot() {
       clearTimeout(happyTimer.current);
       happyTimer.current = setTimeout(() => setHappy(false), 600);
     }} aria-label="Погладить котика">
-      <img className="cat-idle" src={base + 'assets/cat-idle.webp'} width="122" height="130" alt="" draggable="false" />
-      <span className="cat-walk" aria-hidden="true" style={{ backgroundImage: 'url(' + base + 'assets/cat-walk.webp)' }} />
+      <CatSvg />
       <span className="cat-shadow" aria-hidden="true" />
     </button>
     <button className="pet-hide" onClick={() => toggle(false)} aria-label="Спрятать котика" title="Спрятать котика">×</button>

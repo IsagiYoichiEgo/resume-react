@@ -13,9 +13,10 @@ function move(event:PointerEvent<HTMLDivElement>) {
 }
 
 export function Showcase() {
-  const [selected,setSelected] = useState<ShowcaseId>('music');
+  const [selected,setSelected] = useState<ShowcaseId>('xyzen');
   const project = showcase[selected];
-  const behind = showcase[selected === 'music' ? 'ads' : 'music'];
+  const ids = Object.keys(showcase) as ShowcaseId[];
+  const behind = showcase[ids[(ids.indexOf(selected) + 1) % ids.length]];
   return <div className="showcase" data-project={selected} data-reveal data-reveal-delay="2">
     <div className="showcase-canvas" aria-hidden="true" onPointerMove={move} onPointerLeave={event=>{event.currentTarget.style.setProperty('--pointer-x','0');event.currentTarget.style.setProperty('--pointer-y','0');}}>
       <div className="showcase-grid"/><div className="showcase-halo"/><div className="showcase-orbit"/><div className="showcase-orbit orbit-second"/>
@@ -28,6 +29,6 @@ export function Showcase() {
         <div className="showcase-spark">✳</div>
       </div>
     </div>
-    <div className="showcase-controls"><div className="showcase-switch" role="group" aria-label="Выбрать проект для превью">{(Object.keys(showcase) as ShowcaseId[]).map(id=><button type="button" key={id} aria-pressed={selected===id} onClick={()=>setSelected(id)}>{id==='music'?'Музыка':'Объявления'}</button>)}</div><a href={project.url} target="_blank" rel="noreferrer" aria-label={'Открыть проект '+project.title}>Открыть сайт<Icon name="arrow"/></a></div>
+    <div className="showcase-controls"><div className="showcase-switch" role="group" aria-label="Выбрать проект для превью">{(Object.keys(showcase) as ShowcaseId[]).map(id=><button type="button" key={id} aria-pressed={selected===id} onClick={()=>setSelected(id)}>{showcase[id].label}</button>)}</div><a href={project.url} target="_blank" rel="noreferrer" aria-label={'Открыть проект '+project.title}>Открыть сайт<Icon name="arrow"/></a></div>
   </div>;
 }

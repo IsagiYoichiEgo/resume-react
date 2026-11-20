@@ -24,7 +24,7 @@ export function Projects() {
         </div>
       </article>)}
     </div>
-    <p className="covers-note" data-reveal>Для опубликованных сайтов — реальные интерфейсы. Для проектов без демо — графические обложки.</p>
+    <p className="covers-note" data-reveal>Для опубликованных сайтов показаны реальные интерфейсы. Для проектов без демо — графические обложки.</p>
     {selected && <ProjectDialog project={selected} returnFocusTo={trigger.current} onClose={() => setSelected(null)} />}
   </section>;
 }
