@@ -1,0 +1,420 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>XYZEN Music — sound that follows your mood</title>
+<meta name="description" content="XYZEN Music: a dark, glassy music player concept with live generated tracks, mood playlists and a real-time visualizer.">
+<meta name="theme-color" content="#120E1F">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23120E1F'/%3E%3Cpath d='M9 9l14 14M23 9L9 23' stroke='%23FF5E7A' stroke-width='3.5' stroke-linecap='round'/%3E%3C/svg%3E">
+<style>
+:root{
+  --ink:#120E1F;--ink-2:#1B1530;--glass:rgba(255,255,255,.06);--glass-line:rgba(255,255,255,.12);
+  --text:#F2EEFB;--dim:#A69DC0;--coral:#FF5E7A;--lilac:#B9A7FF;--amber:#FFC46B;
+  --display:'Bricolage Grotesque',system-ui,sans-serif;--body:'Instrument Sans',system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--ink);color:var(--text);font:400 16px/1.6 var(--body);overflow-x:hidden}
+body::before{content:"";position:fixed;inset:-20%;z-index:-2;background:
+  radial-gradient(40% 35% at 18% 20%,#FF5E7A2e,transparent 70%),
+  radial-gradient(45% 40% at 85% 30%,#B9A7FF33,transparent 70%),
+  radial-gradient(40% 40% at 60% 95%,#FFC46B1f,transparent 70%);
+  animation:drift 26s ease-in-out infinite alternate}
+@keyframes drift{to{transform:translate3d(4%,-3%,0) rotate(4deg)}}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--amber);outline-offset:4px;border-radius:8px}
+.wrap{width:min(1200px,calc(100% - 48px));margin-inline:auto}
+.glass{background:var(--glass);border:1px solid var(--glass-line);backdrop-filter:blur(22px) saturate(140%);-webkit-backdrop-filter:blur(22px) saturate(140%)}
+
+/* inertia cursor */
+.cursor{position:fixed;left:0;top:0;width:34px;height:34px;margin:-17px 0 0 -17px;border:1.5px solid var(--text);border-radius:50%;pointer-events:none;z-index:100;mix-blend-mode:difference;transition:width .25s,height .25s,margin .25s,background .25s}
+.cursor.is-hover{width:64px;height:64px;margin:-32px 0 0 -32px;background:var(--text)}
+.cursor-dot{position:fixed;left:0;top:0;width:6px;height:6px;margin:-3px 0 0 -3px;border-radius:50%;background:var(--coral);pointer-events:none;z-index:101}
+@media (hover:none),(pointer:coarse){.cursor,.cursor-dot{display:none}}
+
+/* nav */
+nav{position:sticky;top:14px;z-index:20;margin-top:14px}
+.nav-in{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:10px 12px 10px 20px;border-radius:999px}
+.logo{display:flex;align-items:center;gap:10px;font:800 20px/1 var(--display);letter-spacing:-.02em}
+.logo svg{width:26px;height:26px}
+.nav-links{display:flex;gap:28px;color:var(--dim);font-size:14px}
+.nav-links a:hover{color:var(--text)}
+.btn{display:inline-flex;align-items:center;gap:10px;min-height:46px;padding:0 22px;border-radius:999px;border:0;font-weight:600;font-size:15px;transition:transform .2s,background .2s}
+.btn:hover{transform:translateY(-2px)}
+.btn-coral{background:var(--coral);color:#22060D}
+.btn-ghost{background:transparent;border:1px solid var(--glass-line)}
+
+/* hero */
+.hero{display:grid;grid-template-columns:1.05fr .95fr;align-items:center;gap:40px;min-height:calc(100vh - 80px);padding:60px 0 40px}
+.hero h1{margin:0;font:800 clamp(52px,8vw,112px)/.9 var(--display);letter-spacing:-.045em}
+.hero h1 .line{display:block;overflow:hidden}
+.hero h1 .line span{display:block;animation:rise 1s cubic-bezier(.2,.8,.2,1) both}
+.hero h1 .line:nth-child(2) span{animation-delay:.12s;background:linear-gradient(90deg,var(--coral),var(--lilac) 55%,var(--amber));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero h1 .line:nth-child(3) span{animation-delay:.24s}
+@keyframes rise{from{transform:translateY(105%)}}
+.hero p{max-width:440px;margin:28px 0 34px;color:var(--dim);font-size:18px}
+.hero-cta{display:flex;flex-wrap:wrap;gap:14px;animation:fade 1s .5s both}
+@keyframes fade{from{opacity:0;transform:translateY(12px)}}
+.stage{position:relative;aspect-ratio:1;max-width:520px;width:100%;justify-self:center}
+.stage canvas{position:absolute;inset:0;width:100%;height:100%}
+.disc{position:absolute;inset:27%;border-radius:50%;display:grid;place-items:center;background:conic-gradient(from 0deg,#2a1f45,#FF5E7A55,#2a1f45,#B9A7FF55,#2a1f45);box-shadow:inset 0 0 0 10px #ffffff0a,0 30px 80px #0008;animation:spin 14s linear infinite;animation-play-state:paused}
+.playing .disc{animation-play-state:running}
+.disc::after{content:"";width:22%;aspect-ratio:1;border-radius:50%;background:var(--ink);box-shadow:0 0 0 6px #ffffff14}
+@keyframes spin{to{transform:rotate(1turn)}}
+.stage-play{position:absolute;left:50%;top:50%;z-index:2;width:72px;height:72px;margin:-36px 0 0 -36px;border-radius:50%;border:0;background:var(--text);color:var(--ink);display:grid;place-items:center;box-shadow:0 10px 40px #FF5E7A66;transition:transform .2s}
+.stage-play:hover{transform:scale(1.07)}
+.stage-play svg{width:26px;height:26px}
+.stage-tag{position:absolute;right:0;bottom:8%;padding:12px 16px;border-radius:16px;font-size:13px;line-height:1.35}
+.stage-tag b{display:block;font-weight:600}
+.stage-tag span{color:var(--dim)}
+
+/* app shell */
+.section{padding:110px 0}
+.section h2{margin:0 0 14px;font:800 clamp(36px,5vw,64px)/1 var(--display);letter-spacing:-.035em}
+.lead{max-width:520px;margin:0 0 48px;color:var(--dim);font-size:17px}
+.app{display:grid;grid-template-columns:220px 1fr;grid-template-rows:1fr auto;min-height:560px;border-radius:28px;overflow:hidden}
+.side{padding:26px 18px;border-right:1px solid var(--glass-line);display:flex;flex-direction:column;gap:4px}
+.side .logo{margin:0 8px 26px;font-size:17px}
+.side button{display:flex;align-items:center;gap:12px;padding:11px 12px;border:0;border-radius:12px;background:transparent;color:var(--dim);text-align:left;font-size:14px}
+.side button:hover{color:var(--text);background:#ffffff08}
+.side button[aria-pressed=true]{color:var(--text);background:#ffffff12}
+.side button i{width:10px;height:10px;border-radius:3px;flex-shrink:0}
+.side small{margin:22px 12px 6px;color:#ffffff59;font-size:12px}
+.main{padding:28px 30px;overflow:hidden}
+.mood-head{display:flex;align-items:flex-end;gap:24px;margin-bottom:26px}
+.mood-art{width:132px;height:132px;flex-shrink:0;border-radius:20px;box-shadow:0 20px 50px #0007;position:relative;overflow:hidden}
+.mood-art::after{content:"";position:absolute;inset:0;background:repeating-radial-gradient(circle at 30% 70%,#ffffff12 0 2px,transparent 3px 14px)}
+.mood-head h3{margin:0;font:800 44px/1 var(--display);letter-spacing:-.03em}
+.mood-head p{margin:8px 0 0;color:var(--dim);font-size:14px}
+.tracks{list-style:none;margin:0;padding:0}
+.tracks li button{display:grid;grid-template-columns:28px 1fr auto;align-items:center;gap:16px;width:100%;padding:12px 14px;border:0;border-radius:14px;background:transparent;text-align:left}
+.tracks li button:hover{background:#ffffff08}
+.tracks li button[aria-current=true]{background:#ffffff10}
+.tracks li button[aria-current=true] .t-title{color:var(--coral)}
+.t-num{color:var(--dim);font-size:13px;text-align:center}
+.t-title{display:block;font-weight:600;font-size:15px}
+.t-artist{display:block;color:var(--dim);font-size:13px}
+.t-len{color:var(--dim);font-size:13px;font-variant-numeric:tabular-nums}
+.eq{display:none;align-items:flex-end;gap:2px;height:14px;justify-content:center}
+.eq i{width:3px;background:var(--coral);border-radius:2px;animation:eq .8s ease-in-out infinite alternate}
+.eq i:nth-child(2){animation-delay:-.3s}.eq i:nth-child(3){animation-delay:-.6s}
+@keyframes eq{from{height:3px}to{height:14px}}
+.playing .tracks [aria-current=true] .t-num span{display:none}
+.playing .tracks [aria-current=true] .eq{display:flex}
+.bar{grid-column:1/-1;display:grid;grid-template-columns:1fr 1.4fr 1fr;align-items:center;gap:24px;padding:16px 26px;border-top:1px solid var(--glass-line);background:#0000002e}
+.now{display:flex;align-items:center;gap:14px;min-width:0}
+.now .mood-art{width:48px;height:48px;border-radius:10px;box-shadow:none}
+.now div{min-width:0}
+.now b,.now span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.now b{font-size:14px}.now span{font-size:12px;color:var(--dim)}
+.ctrl{display:flex;flex-direction:column;align-items:center;gap:8px}
+.ctrl-btns{display:flex;align-items:center;gap:18px}
+.ctrl-btns button{display:grid;place-items:center;width:36px;height:36px;border:0;border-radius:50%;background:transparent;color:var(--dim)}
+.ctrl-btns button:hover{color:var(--text)}
+.ctrl-btns .main-play{width:44px;height:44px;background:var(--text);color:var(--ink)}
+.ctrl-btns svg{width:18px;height:18px}
+.progress{display:flex;align-items:center;gap:10px;width:100%;font-size:11px;color:var(--dim);font-variant-numeric:tabular-nums}
+.track-line{flex:1;height:4px;border-radius:4px;background:#ffffff1a;overflow:hidden}
+.track-line i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--coral),var(--lilac))}
+.vol{display:flex;justify-content:flex-end;align-items:center;gap:10px;color:var(--dim);font-size:12px}
+.vol input{width:110px;accent-color:var(--coral)}
+
+/* features */
+.feats{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.feat{padding:30px;border-radius:24px}
+.feat:nth-child(2){transform:translateY(40px)}
+.feat svg{width:40px;height:40px;margin-bottom:22px}
+.feat h3{margin:0 0 10px;font:600 22px/1.2 var(--display)}
+.feat p{margin:0;color:var(--dim);font-size:15px}
+.cta-band{margin-top:140px;padding:70px 50px;border-radius:32px;text-align:center;position:relative;overflow:hidden}
+.cta-band h2{margin:0 auto 14px;max-width:700px}
+.cta-band p{color:var(--dim);margin:0 0 30px}
+footer{padding:50px 0 60px;color:var(--dim);font-size:13px;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+
+.reveal{opacity:0;transform:translateY(40px);transition:opacity .9s cubic-bezier(.2,.8,.2,1),transform .9s cubic-bezier(.2,.8,.2,1)}
+.reveal.in{opacity:1;transform:none}
+.feat.reveal.in:nth-child(2){transform:translateY(40px)}
+
+@media (max-width:900px){
+  .nav-links{display:none}
+  .hero{grid-template-columns:1fr;min-height:auto;padding-top:50px;text-align:left}
+  .stage{max-width:400px}
+  .app{grid-template-columns:1fr}
+  .side{flex-direction:row;overflow-x:auto;border-right:0;border-bottom:1px solid var(--glass-line);padding:14px}
+  .side .logo,.side small{display:none}
+  .side button{white-space:nowrap}
+  .bar{grid-template-columns:1fr auto;gap:14px}
+  .vol{display:none}
+  .ctrl .progress{display:none}
+  .feats{grid-template-columns:1fr}
+  .feat:nth-child(2),.feat.reveal.in:nth-child(2){transform:none}
+}
+@media (max-width:560px){
+  .wrap{width:calc(100% - 28px)}
+  .main{padding:20px 14px}
+  .mood-head{gap:16px}.mood-art{width:92px;height:92px}.mood-head h3{font-size:32px}
+  .t-len{display:none}.tracks li button{grid-template-columns:24px 1fr}
+  .cta-band{padding:50px 22px}
+  .nav-in .btn{padding:0 16px;font-size:14px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before{animation:none!important;transition:none!important}
+  .reveal{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+<div class="cursor" aria-hidden="true"></div><div class="cursor-dot" aria-hidden="true"></div>
+
+<nav class="wrap"><div class="nav-in glass">
+  <a class="logo" href="#top"><svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="9" fill="#ffffff14"/><path d="M9 9l14 14M23 9L9 23" stroke="#FF5E7A" stroke-width="3.5" stroke-linecap="round"/></svg>XYZEN</a>
+  <div class="nav-links"><a href="#player">Player</a><a href="#features">Features</a><a href="#start">Get the app</a></div>
+  <a class="btn btn-coral" href="#player">Open player</a>
+</div></nav>
+
+<main id="top">
+<section class="hero wrap" aria-labelledby="hero-title">
+  <div>
+    <h1 id="hero-title"><span class="line"><span>Sound that</span></span><span class="line"><span>follows</span></span><span class="line"><span>your mood.</span></span></h1>
+    <p>Pick how you feel, and XYZEN builds the soundtrack. Every track below is generated live in your browser, so press play.</p>
+    <div class="hero-cta"><button class="btn btn-coral" data-play>Play a track</button><a class="btn btn-ghost" href="#player">See the player</a></div>
+  </div>
+  <div class="stage">
+    <canvas id="viz" aria-hidden="true"></canvas>
+    <div class="disc" aria-hidden="true"></div>
+    <button class="stage-play" data-play aria-label="Play or pause"><svg class="ico-play" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg></button>
+    <div class="stage-tag glass"><b id="tag-title">Night Drive</b><span id="tag-artist">Lumen Avenue</span></div>
+  </div>
+</section>
+
+<section id="player" class="section wrap" aria-labelledby="player-title">
+  <h2 id="player-title" class="reveal">One player, four moods.</h2>
+  <p class="lead reveal">Switch moods in the sidebar. Tracks, colors and tempo change with them.</p>
+  <div class="app glass reveal">
+    <aside class="side" aria-label="Moods">
+      <div class="logo"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M9 9l14 14M23 9L9 23" stroke="#FF5E7A" stroke-width="3.5" stroke-linecap="round"/></svg>XYZEN</div>
+      <small>Moods</small>
+      <div id="moods" style="display:contents"></div>
+    </aside>
+    <div class="main">
+      <div class="mood-head"><div class="mood-art" id="mood-art"></div><div><h3 id="mood-name"></h3><p id="mood-desc"></p></div></div>
+      <ol class="tracks" id="tracks"></ol>
+    </div>
+    <div class="bar">
+      <div class="now"><div class="mood-art" id="now-art"></div><div><b id="now-title">—</b><span id="now-artist">Pick a track</span></div></div>
+      <div class="ctrl">
+        <div class="ctrl-btns">
+          <button id="prev" aria-label="Previous track"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h2v14H6zM20 6.2v11.6a1 1 0 0 1-1.5.86L9.5 12.86a1 1 0 0 1 0-1.72l9-5.8A1 1 0 0 1 20 6.2z"/></svg></button>
+          <button class="main-play" data-play aria-label="Play or pause"><svg class="ico-play" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg></button>
+          <button id="next" aria-label="Next track"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 5h2v14h-2zM4 6.2v11.6a1 1 0 0 0 1.5.86l9-5.8a1 1 0 0 0 0-1.72l-9-5.8A1 1 0 0 0 4 6.2z"/></svg></button>
+        </div>
+        <div class="progress"><span id="cur">0:00</span><div class="track-line"><i id="prog"></i></div><span id="dur">0:00</span></div>
+      </div>
+      <label class="vol">Volume <input id="vol" type="range" min="0" max="1" step="0.01" value="0.6"></label>
+    </div>
+  </div>
+</section>
+
+<section id="features" class="section wrap" aria-labelledby="feat-title">
+  <h2 id="feat-title" class="reveal">Made for listening, not scrolling.</h2>
+  <p class="lead reveal">A quiet interface that gets out of the way of the music.</p>
+  <div class="feats">
+    <article class="feat glass reveal"><svg viewBox="0 0 40 40" fill="none" stroke="#FF5E7A" stroke-width="2.4" stroke-linecap="round"><path d="M6 20h4M14 12v16M20 6v28M26 14v12M32 18v4"/></svg><h3>Live visualizer</h3><p>The ring around the disc reacts to the real audio signal, not a looped animation.</p></article>
+    <article class="feat glass reveal"><svg viewBox="0 0 40 40" fill="none" stroke="#B9A7FF" stroke-width="2.4"><circle cx="20" cy="20" r="13"/><path d="M20 7v13l8 5" stroke-linecap="round"/></svg><h3>Mood playlists</h3><p>Focus, Night drive, Sunrise and Rain: each mood has its own tempo and palette.</p></article>
+    <article class="feat glass reveal"><svg viewBox="0 0 40 40" fill="none" stroke="#FFC46B" stroke-width="2.4" stroke-linejoin="round"><rect x="11" y="4" width="18" height="32" rx="5"/><path d="M17 30h6" stroke-linecap="round"/></svg><h3>Works on any screen</h3><p>The same player on a phone, laptop or wide monitor, with nothing to install.</p></article>
+  </div>
+  <div id="start" class="cta-band glass reveal">
+    <h2>Turn the volume up.</h2>
+    <p>XYZEN is a concept project by alimbro. Everything here is built with plain HTML, CSS and JavaScript.</p>
+    <button class="btn btn-coral" data-play>Play a track</button>
+  </div>
+</section>
+</main>
+
+<footer class="wrap"><span>© <span id="year"></span> XYZEN Music · concept by alimbro</span><a href="../">← Back to portfolio</a></footer>
+
+<script>
+(() => {
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  /* ---------- data: fictional artists, generated tracks ---------- */
+  const moods = [
+    {id:'night',name:'Night drive',desc:'Slow synth pads for empty roads',colors:['#FF5E7A','#3B1E5F'],bpm:84,root:45,scale:[0,3,7,10,12,15],
+     tracks:[['Night Drive','Lumen Avenue'],['Neon Rain','Velvet Static'],['Overpass','Kairo Lane']]},
+    {id:'focus',name:'Focus',desc:'Steady pulses that keep you working',colors:['#B9A7FF','#1E2A5F'],bpm:96,root:50,scale:[0,2,7,9,12,14],
+     tracks:[['Deep Work','Quiet Index'],['Clean Desk','Mono Field'],['Flow State','Arden Loop']]},
+    {id:'sunrise',name:'Sunrise',desc:'Bright, warm chords for slow mornings',colors:['#FFC46B','#7A2E4A'],bpm:108,root:48,scale:[0,4,7,11,12,16],
+     tracks:[['First Light','Solenne'],['Golden Hour','Marigold Club'],['Open Window','Tavi Reyes']]},
+    {id:'rain',name:'Rain',desc:'Soft and minor, for staying in',colors:['#7FD6E8','#1C2F45'],bpm:72,root:43,scale:[0,3,5,7,10,12],
+     tracks:[['Window Seat','Grey Harbor'],['Low Clouds','Fen & Moss'],['Puddles','Nori Vale']]},
+  ];
+  const TRACK_LEN = 48; // seconds
+  let mood = moods[0], index = 0;
+
+  const $ = s => document.querySelector(s);
+  const art = el => { el.style.background = `radial-gradient(circle at 30% 30%, ${mood.colors[0]}, transparent 60%), linear-gradient(135deg, ${mood.colors[0]}, ${mood.colors[1]})`; };
+  const fmt = s => Math.floor(s/60)+':'+String(Math.floor(s%60)).padStart(2,'0');
+
+  function renderMoods(){
+    $('#moods').innerHTML = moods.map(m => `<button data-mood="${m.id}" aria-pressed="${m===mood}"><i style="background:${m.colors[0]}"></i>${m.name}</button>`).join('');
+  }
+  function renderTracks(){
+    $('#mood-name').textContent = mood.name; $('#mood-desc').textContent = mood.desc + ' · ' + mood.tracks.length + ' tracks';
+    art($('#mood-art'));
+    $('#tracks').innerHTML = mood.tracks.map((t,i) => `<li><button data-track="${i}" aria-current="${i===index}"><span class="t-num"><span>${i+1}</span><span class="eq"><i></i><i></i><i></i></span></span><span><span class="t-title">${t[0]}</span><span class="t-artist">${t[1]}</span></span><span class="t-len">${fmt(TRACK_LEN)}</span></button></li>`).join('');
+  }
+  function renderNow(){
+    const [title, artist] = mood.tracks[index];
+    $('#now-title').textContent = title; $('#now-artist').textContent = artist;
+    $('#tag-title').textContent = title; $('#tag-artist').textContent = artist;
+    art($('#now-art')); $('#dur').textContent = fmt(TRACK_LEN);
+    document.querySelectorAll('[data-track]').forEach(b => b.setAttribute('aria-current', String(+b.dataset.track === index)));
+  }
+
+  /* ---------- audio engine (Web Audio, generated) ---------- */
+  let ctx, master, analyser, timer, startedAt = 0, playing = false, step = 0, nextTime = 0;
+  const hz = n => 440 * Math.pow(2, (n - 69) / 12);
+  function ensure(){
+    if (ctx) return;
+    ctx = new (window.AudioContext || window.webkitAudioContext)();
+    master = ctx.createGain(); master.gain.value = +$('#vol').value * .5;
+    const comp = ctx.createDynamicsCompressor();
+    analyser = ctx.createAnalyser(); analyser.fftSize = 256;
+    const delay = ctx.createDelay(); delay.delayTime.value = .33;
+    const fb = ctx.createGain(); fb.gain.value = .32;
+    delay.connect(fb).connect(delay);
+    master.connect(comp); master.connect(delay); delay.connect(comp);
+    comp.connect(analyser).connect(ctx.destination);
+  }
+  function voice(freq, t, len, type, vol, cutoff){
+    const o = ctx.createOscillator(), g = ctx.createGain(), f = ctx.createBiquadFilter();
+    o.type = type; o.frequency.value = freq; f.type = 'lowpass'; f.frequency.value = cutoff;
+    g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(vol, t + Math.min(.04, len/4));
+    g.gain.exponentialRampToValueAtTime(.0001, t + len);
+    o.connect(f).connect(g).connect(master); o.start(t); o.stop(t + len + .05);
+  }
+  function kick(t){
+    const o = ctx.createOscillator(), g = ctx.createGain();
+    o.frequency.setValueAtTime(130, t); o.frequency.exponentialRampToValueAtTime(40, t + .18);
+    g.gain.setValueAtTime(.7, t); g.gain.exponentialRampToValueAtTime(.001, t + .3);
+    o.connect(g).connect(master); o.start(t); o.stop(t + .32);
+  }
+  function hat(t){
+    const len = .05, buf = ctx.createBuffer(1, ctx.sampleRate * len, ctx.sampleRate), d = buf.getChannelData(0);
+    for (let i = 0; i < d.length; i++) d[i] = (Math.random()*2-1) * (1 - i/d.length);
+    const s = ctx.createBufferSource(), f = ctx.createBiquadFilter(), g = ctx.createGain();
+    f.type = 'highpass'; f.frequency.value = 7000; g.gain.value = .12;
+    s.buffer = buf; s.connect(f).connect(g).connect(master); s.start(t);
+  }
+  // seeded random so each track always sounds the same
+  function rng(seed){ return () => (seed = (seed * 16807) % 2147483647) / 2147483647; }
+  let pattern = [];
+  function buildPattern(){
+    const r = rng(7 + moods.indexOf(mood) * 31 + index * 101), sc = mood.scale;
+    const chords = [0, 3, 4, 2].map(() => Math.floor(r() * 3));
+    pattern = Array.from({length: 64}, (_, i) => ({
+      chord: i % 16 === 0 ? chords[(i/16)|0] : null,
+      lead: r() > .55 ? sc[Math.floor(r()*sc.length)] + 12 : null,
+      bass: i % 4 === 0 ? sc[chords[(i/16)|0]] - 12 : null,
+    }));
+  }
+  function schedule(){
+    const sixteenth = 60 / mood.bpm / 4;
+    while (nextTime < ctx.currentTime + .15){
+      const s = pattern[step % 64], t = nextTime, root = mood.root + 12, sc = mood.scale;
+      if (s.chord !== null) [0, 2, 4].forEach(k => voice(hz(root + sc[(s.chord + k) % sc.length]), t, sixteenth * 15, 'sawtooth', .05, 900));
+      if (s.bass !== null) voice(hz(root + s.bass), t, sixteenth * 3, 'triangle', .22, 600);
+      if (s.lead !== null) voice(hz(root + s.lead), t, sixteenth * 2.2, 'sine', .09, 3000);
+      if (step % 4 === 0) kick(t);
+      if (step % 2 === 1) hat(t);
+      step++; nextTime += sixteenth;
+    }
+    const pos = ctx.currentTime - startedAt;
+    $('#cur').textContent = fmt(Math.min(pos, TRACK_LEN));
+    $('#prog').style.width = Math.min(100, pos / TRACK_LEN * 100) + '%';
+    if (pos >= TRACK_LEN) go(1);
+  }
+  function play(){
+    ensure(); ctx.resume(); buildPattern();
+    step = 0; nextTime = ctx.currentTime + .05; startedAt = ctx.currentTime;
+    clearInterval(timer); timer = setInterval(schedule, 25);
+    playing = true; setPlayingUI();
+  }
+  function pause(){
+    clearInterval(timer); playing = false; setPlayingUI();
+    if (ctx) ctx.suspend();
+  }
+  function go(dir){ index = (index + dir + mood.tracks.length) % mood.tracks.length; renderNow(); if (playing) play(); }
+  const PLAY = '<path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/>';
+  const PAUSE = '<path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z"/>';
+  function setPlayingUI(){
+    document.body.classList.toggle('playing', playing);
+    document.querySelectorAll('.ico-play').forEach(s => s.innerHTML = playing ? PAUSE : PLAY);
+    document.querySelectorAll('button[data-play]').forEach(b => { if (b.classList.contains('btn')) b.textContent = playing ? 'Pause' : 'Play a track'; });
+  }
+
+  document.addEventListener('click', e => {
+    const t = e.target.closest('button'); if (!t) return;
+    if (t.matches('[data-play]')) playing ? pause() : (ctx && ctx.state === 'suspended' && step ? (ctx.resume(), clearInterval(timer), timer = setInterval(schedule,25), playing = true, setPlayingUI()) : play());
+    else if (t.dataset.mood){ mood = moods.find(m => m.id === t.dataset.mood); index = 0; renderMoods(); renderTracks(); renderNow(); if (playing) play(); else step = 0; }
+    else if (t.dataset.track){ index = +t.dataset.track; renderNow(); play(); }
+    else if (t.id === 'next') go(1);
+    else if (t.id === 'prev') go(-1);
+  });
+  $('#vol').addEventListener('input', e => { if (master) master.gain.value = e.target.value * .5; });
+
+  renderMoods(); renderTracks(); renderNow();
+
+  /* ---------- visualizer ring ---------- */
+  const cv = $('#viz'), g2 = cv.getContext('2d');
+  let data = new Uint8Array(128), phase = 0;
+  function draw(){
+    const r = cv.getBoundingClientRect(), dpr = Math.min(2, devicePixelRatio || 1);
+    if (cv.width !== r.width * dpr){ cv.width = r.width * dpr; cv.height = r.height * dpr; }
+    const w = cv.width, cx = w/2, base = w * .29;
+    g2.clearRect(0, 0, w, w);
+    if (analyser && playing) analyser.getByteFrequencyData(data);
+    else data = data.map(v => v * .92);
+    phase += .01;
+    const bars = 96;
+    for (let i = 0; i < bars; i++){
+      const a = i / bars * Math.PI * 2 - Math.PI/2;
+      const v = data[Math.floor(i % 48 * 1.3)] / 255;
+      const idle = (Math.sin(i * .5 + phase * 3) + 1) * .012;
+      const len = w * (.02 + idle + v * .17);
+      const grad = i / bars;
+      g2.strokeStyle = grad < .5 ? mood.colors[0] : '#B9A7FF';
+      g2.globalAlpha = .35 + v * .65;
+      g2.lineWidth = w * .007; g2.lineCap = 'round';
+      g2.beginPath();
+      g2.moveTo(cx + Math.cos(a) * base, cx + Math.sin(a) * base);
+      g2.lineTo(cx + Math.cos(a) * (base + len), cx + Math.sin(a) * (base + len));
+      g2.stroke();
+    }
+    g2.globalAlpha = 1;
+    if (!reduce || playing) requestAnimationFrame(draw);
+  }
+  draw();
+
+  /* ---------- inertia cursor ---------- */
+  const ring = $('.cursor'), dot = $('.cursor-dot');
+  if (matchMedia('(hover:hover) and (pointer:fine)').matches){
+    let mx = innerWidth/2, my = innerHeight/2, rx = mx, ry = my;
+    addEventListener('pointermove', e => { mx = e.clientX; my = e.clientY; dot.style.transform = `translate(${mx}px,${my}px)`; });
+    document.addEventListener('pointerover', e => ring.classList.toggle('is-hover', !!e.target.closest('a,button,input')));
+    (function loop(){ rx += (mx - rx) * (reduce ? 1 : .14); ry += (my - ry) * (reduce ? 1 : .14); ring.style.transform = `translate(${rx}px,${ry}px)`; requestAnimationFrame(loop); })();
+  }
+
+  /* ---------- scroll reveal ---------- */
+  const io = 'IntersectionObserver' in window && !reduce ? new IntersectionObserver(es => es.forEach(en => { if (en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); } }), {rootMargin:'0px 0px -10% 0px'}) : null;
+  document.querySelectorAll('.reveal').forEach(el => io ? io.observe(el) : el.classList.add('in'));
+})();
+</script>
+</body>
+</html>

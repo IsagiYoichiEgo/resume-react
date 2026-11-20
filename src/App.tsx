@@ -4,17 +4,21 @@ import { Projects } from './components/Projects';
 import { Contact } from './components/Contact';
 import { Workflow } from './components/Workflow';
 import { Mascot } from './components/Mascot';
+import { Marquee } from './components/Marquee';
+import { useSpotlight } from './lib/useSpotlight';
 import { profile } from './data/resume';
 import { useViewportReveal } from './lib/useViewportReveal';
 
 export default function App() {
   useViewportReveal();
+  useSpotlight('.contact-panel');
   return <>
     <a className="skip-link" href="#main">Перейти к содержимому</a>
     <Header />
     <main id="main" tabIndex={-1}>
       <Hero />
       <Projects />
+      <Marquee />
       <section id="about" className="about-section container" aria-labelledby="about-title">
         <div className="about-title" data-reveal><span className="about-spark" aria-hidden="true">✳</span><h2 id="about-title">Обо мне</h2></div>
         <div className="about-copy" data-reveal data-reveal-delay="1"><p>Я Аброрбек, учусь в <span>INAI</span> в Бишкеке. Делаю личные и учебные проекты, использую AI в работе.</p><p>Открыт к небольшим платным заказам: сайтам и веб-интерфейсам.</p></div>

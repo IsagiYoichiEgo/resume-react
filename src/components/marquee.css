@@ -1,0 +1,15 @@
+.ribbons{position:relative;padding-block:30px 90px;overflow:hidden;--ribbon-shift:0}
+.ribbon{display:flex;white-space:nowrap;padding-block:16px;transform:rotate(-2.2deg)}
+.ribbon-work{background:var(--mint);color:#0d2621;box-shadow:0 18px 50px #7de6d118}
+.ribbon-stack{margin-top:-6px;transform:rotate(1.4deg);border-block:1px solid #ffffff1c;background:#121c31;color:#c9d4e4}
+.ribbon-track{display:flex;flex-shrink:0;transform:translate3d(calc(var(--ribbon-shift) * -1px),0,0);will-change:transform}
+.ribbon-stack .ribbon-track{transform:translate3d(calc(var(--ribbon-shift) * 1px - 1200px),0,0)}
+.ribbon-set{display:flex;flex-shrink:0;animation:ribbon-flow 38s linear infinite}
+.ribbon-stack .ribbon-set{animation-direction:reverse;animation-duration:46s}
+.ribbon span{display:inline-flex;align-items:center;gap:30px;padding-right:30px;font-family:'Unbounded',sans-serif;font-size:clamp(22px,2.6vw,36px);font-weight:600;letter-spacing:-.04em;line-height:1.2}
+.ribbon-stack span{font-family:'Golos Text',sans-serif;font-size:clamp(16px,1.6vw,21px);font-weight:500;letter-spacing:-.01em}
+.ribbon i{font-style:normal;font-size:.8em;color:#0d262199}
+.ribbon-stack i{color:var(--peach)}
+@keyframes ribbon-flow{to{transform:translate3d(-100%,0,0)}}
+@media(max-width:650px){.ribbons{padding-block:10px 60px}.ribbon{padding-block:11px}.ribbon span{gap:18px;padding-right:18px}}
+@media(prefers-reduced-motion:reduce){.ribbon-set{animation:none}.ribbon-track{transform:none!important}}
