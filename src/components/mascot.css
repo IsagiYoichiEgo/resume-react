@@ -53,3 +53,53 @@ body:has(dialog[open]) .mascot,body:has(dialog[open]) .pet-restore{visibility:hi
 
 .pet-bubble{visibility:hidden}
 .mascot[data-bubble-clear="true"] .pet-bubble{visibility:visible}
+
+/* ---------- scenes: the cat picks up a prop per section ---------- */
+.cat-prop{opacity:0;transform:scale(.4) translateY(10px);transform-origin:50% 100%;transition:opacity .35s ease,transform .5s cubic-bezier(.3,1.5,.5,1)}
+.mascot[data-scene="glass"] .cat-prop-glass,
+.mascot[data-scene="ball"] .cat-prop-ball,
+.mascot[data-scene="laptop"] .cat-prop-laptop,
+.mascot[data-scene="wave"] .cat-prop-wave{opacity:1;transform:none}
+.mascot[data-scene="glass"] .cat-prop-glass{animation:cat-glass 3.6s ease-in-out infinite}
+@keyframes cat-glass{0%,100%{transform:translate(0,0) rotate(0)}30%{transform:translate(-5px,2px) rotate(-6deg)}65%{transform:translate(3px,-2px) rotate(4deg)}}
+.mascot[data-scene="ball"] .cat-ball{transform-origin:50% 50%;animation:cat-ball 2.4s cubic-bezier(.45,0,.3,1) infinite}
+@keyframes cat-ball{0%,100%{transform:translateX(0) rotate(0)}50%{transform:translateX(-10px) rotate(-200deg)}}
+.mascot[data-scene="ball"] .cat-paw-right{animation:cat-kick 2.4s ease-in-out infinite}
+@keyframes cat-kick{0%,40%,100%{transform:none}50%{transform:translate(4px,-3px) rotate(-12deg)}}
+.cat-type{transform-origin:50% 50%}
+.mascot[data-scene="laptop"] .cat-type-l{animation:cat-typing .34s ease-in-out infinite alternate}
+.mascot[data-scene="laptop"] .cat-type-r{animation:cat-typing .34s .17s ease-in-out infinite alternate}
+@keyframes cat-typing{to{transform:translateY(-3px)}}
+.mascot[data-scene="laptop"] .cat-code{animation:cat-code 1.6s steps(4) infinite}
+@keyframes cat-code{0%{stroke-dasharray:0 40}100%{stroke-dasharray:40 0}}
+.mascot[data-scene="laptop"] .cat-paw,.mascot[data-scene="wave"] .cat-paw-right{opacity:0}
+.mascot[data-scene="laptop"] .cat-head{transform:translate(0,3px) rotate(0)}
+.mascot[data-scene="laptop"] .cat-pupils{transform:translate(0,2.6px)}
+.cat-wave-arm,.cat-wave-hand{transform-origin:0% 100%}
+.mascot[data-scene="wave"] .cat-prop-wave{transform-origin:0% 100%;animation:cat-wave 1.3s ease-in-out infinite}
+@keyframes cat-wave{0%,100%{transform:rotate(0)}25%{transform:rotate(-14deg)}75%{transform:rotate(10deg)}}
+
+/* ---------- sleeping ---------- */
+.cat-eye-sleep,.cat-zzz{opacity:0;transition:opacity .4s}
+.mascot.is-sleeping .cat-eye-open{opacity:0;animation:none}
+.mascot.is-sleeping .cat-eye-sleep{opacity:1}
+.mascot.is-sleeping .cat-zzz{opacity:1}
+.mascot.is-sleeping .cat-zzz text{animation:cat-z 2.6s ease-in-out infinite}
+.mascot.is-sleeping .cat-zzz text:nth-child(2){animation-delay:.4s}.mascot.is-sleeping .cat-zzz text:nth-child(3){animation-delay:.8s}
+@keyframes cat-z{0%{opacity:0;transform:translateY(6px)}40%{opacity:1}100%{opacity:0;transform:translateY(-8px)}}
+.mascot.is-sleeping .cat-body{animation-duration:6.5s}
+.mascot.is-sleeping .cat-prop{opacity:0;transform:scale(.4)}
+
+/* ---------- backflip ---------- */
+.mascot.is-flipping .pet-button{animation:cat-flip .85s cubic-bezier(.3,.7,.3,1)}
+@keyframes cat-flip{0%{transform:none}20%{transform:translateY(6px) scaleY(.86)}55%{transform:translateY(-90px) rotate(-200deg)}85%{transform:translateY(-6px) rotate(-360deg)}100%{transform:rotate(-360deg)}}
+.cat-burst{position:absolute;left:50%;top:30%;z-index:3;font-size:20px;color:var(--mint);pointer-events:none;animation:cat-burst 1s cubic-bezier(.2,.7,.3,1) forwards}
+@keyframes cat-burst{0%{opacity:0;transform:translate(-50%,0) scale(.4)}20%{opacity:1}100%{opacity:0;transform:translate(calc(-50% + var(--bx)),var(--by)) scale(1.1) rotate(30deg)}}
+
+/* ---------- paw prints ---------- */
+.paw-layer{position:fixed;inset:0;z-index:34;pointer-events:none;overflow:hidden}
+.paw-print{position:absolute;width:14px;height:14px;background:no-repeat center/contain url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%237DE6D1'%3E%3Cellipse cx='12' cy='16' rx='5.5' ry='4.5'/%3E%3Ccircle cx='5.5' cy='10' r='2.3'/%3E%3Ccircle cx='9.5' cy='6' r='2.3'/%3E%3Ccircle cx='14.5' cy='6' r='2.3'/%3E%3Ccircle cx='18.5' cy='10' r='2.3'/%3E%3C/svg%3E");opacity:.55;animation:paw-fade 1.4s ease-out forwards}
+@keyframes paw-fade{0%{opacity:.6;transform:scale(.6)}20%{transform:scale(1)}100%{opacity:0}}
+.paw-print.is-rain{width:22px;height:22px;opacity:0;animation:paw-rain 2.2s var(--fall-delay,0ms) cubic-bezier(.4,0,.6,1) forwards}
+@keyframes paw-rain{0%{opacity:0;transform:translateY(0) rotate(0)}10%{opacity:.8}100%{opacity:0;transform:translateY(105vh) rotate(var(--fall-turn))}}
+@media(prefers-reduced-motion:reduce){.cat-prop{transition:none}.mascot .cat-prop,.mascot .cat-ball,.mascot .cat-type,.mascot .cat-code,.mascot .cat-zzz text{animation:none!important}.paw-layer{display:none}}

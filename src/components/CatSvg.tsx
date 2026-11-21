@@ -56,6 +56,9 @@ export function CatSvg() {
         <g className="cat-eye-happy" fill="none" stroke="#0A1020" strokeWidth="3" strokeLinecap="round">
           <path d="M44 58q8-10 16 0M80 58q8-10 16 0" />
         </g>
+        <g className="cat-eye-sleep" fill="none" stroke="#0A1020" strokeWidth="3" strokeLinecap="round">
+          <path d="M44 56q8 8 16 0M80 56q8 8 16 0" />
+        </g>
       </g>
 
       <ellipse className="cat-blush" cx="40" cy="70" rx="7" ry="4" fill="#FF9C9C" opacity=".45" />
@@ -68,6 +71,36 @@ export function CatSvg() {
         <path d="M44 86q26 12 52 0" fill="none" stroke="#7DE6D1" strokeWidth="5" strokeLinecap="round" />
         <circle cx="70" cy="94" r="5" fill="#FFD27A" stroke="#C99A3E" strokeWidth="1" />
       </g>
+    </g>
+
+    {/* Scene props: only the one matching the current section is shown. */}
+    <g className="cat-prop cat-prop-glass">
+      <circle cx="112" cy="58" r="15" fill="#7DE6D133" stroke="#2B3B57" strokeWidth="5" />
+      <circle cx="107" cy="52" r="4" fill="#ffffffaa" />
+      <path d="M101 70 88 92" stroke="#2B3B57" strokeWidth="7" strokeLinecap="round" />
+      <ellipse cx="88" cy="93" rx="8" ry="6" fill="#FFF6EA" />
+    </g>
+    <g className="cat-prop cat-prop-ball">
+      <g className="cat-ball">
+        <circle cx="118" cy="134" r="13" fill="#FFFDF8" stroke="#0A1020" strokeWidth="1.6" />
+        <path d="M118 127l6 4-2 7h-8l-2-7z" fill="#0A1020" />
+        <path d="M118 121v6M124 131l7-2M122 138l4 7M114 138l-4 7M112 131l-7-2" stroke="#0A1020" strokeWidth="1.4" />
+      </g>
+    </g>
+    <g className="cat-prop cat-prop-laptop">
+      <path d="M40 114h60l6 22H34z" fill="#2B3B57" />
+      <rect x="44" y="96" width="52" height="20" rx="3" fill="#1A2740" />
+      <rect className="cat-screen" x="48" y="99" width="44" height="14" rx="2" fill="#7DE6D1" />
+      <path className="cat-code" d="M52 103h14M52 107h22M52 111h10" stroke="#0A1020" strokeWidth="1.6" strokeLinecap="round" />
+      <ellipse className="cat-type cat-type-l" cx="58" cy="126" rx="8" ry="5.5" fill="#FFF6EA" />
+      <ellipse className="cat-type cat-type-r" cx="82" cy="126" rx="8" ry="5.5" fill="#FFF6EA" />
+    </g>
+    <g className="cat-prop cat-prop-wave">
+      <path className="cat-wave-arm" d="M94 112c12-6 18-18 17-32" stroke="#FFF6EA" strokeWidth="13" strokeLinecap="round" fill="none" />
+      <g className="cat-wave-hand"><ellipse cx="111" cy="75" rx="10" ry="10.5" fill="#FFF6EA" /><path d="M108 70v-3M112 69v-3.5M116 70v-3" stroke="#E2BFA0" strokeWidth="1.4" strokeLinecap="round" /></g>
+    </g>
+    <g className="cat-zzz" fill="#AAB4C7" fontFamily="Unbounded, sans-serif" fontWeight="600">
+      <text x="104" y="30" fontSize="12">z</text><text x="114" y="18" fontSize="15">z</text><text x="126" y="4" fontSize="18">Z</text>
     </g>
 
     <g className="cat-hearts" fill="#FF7A90">

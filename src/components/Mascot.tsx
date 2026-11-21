@@ -5,10 +5,13 @@ import './mascot.css';
 
 const sectionMessages: Record<string, string> = {
   home: 'Мур. Посмотрим проекты?',
-  projects: 'Лапка за любопытство! 🐾',
-  about: 'Можно просто alimbro. Я тоже так зову.',
-  contact: 'Здесь можно написать Аброрбеку.',
+  projects: 'Изучаю каждый пиксель. 🔍',
+  about: 'Можно просто alimbro. Карточки можно листать!',
+  process: 'Тут Аброрбек работает. Я помогаю. Немного.',
+  contact: 'Напишите ему, он быстро отвечает. Мяу!',
 };
+// Which prop the cat holds in each section.
+const sceneOf: Record<string, string> = { home: 'home', projects: 'glass', about: 'ball', process: 'laptop', contact: 'wave' };
 const clickMessages = ['У вас хороший вкус. Мур!', 'Я тут слежу за порядком. И за курсором.', 'Лапка за любопытство! 🐾', 'Проекты выше, контакты ниже. Всё просто.'];
 
 function controlBounds(includeText=false) {
@@ -27,6 +30,11 @@ export function Mascot() {
   const happyTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const lastBubble = useRef({ time: Number.NEGATIVE_INFINITY, section: '' });
   const clicks = useRef(0);
+  const recentClicks = useRef<number[]>([]);
+  const prints = useRef<HTMLDivElement>(null);
+  const [scene, setScene] = useState('home');
+  const [sleeping, setSleeping] = useState(false);
+  const [flipping, setFlipping] = useState(false);
   const [visible, setVisible] = useState(() => { try { return localStorage.getItem('alimbro-cat') !== 'hidden'; } catch { return true; } });
   const [walking, setWalking] = useState(false);
   const [happy, setHappy] = useState(false);
@@ -129,6 +137,65 @@ export function Mascot() {
     return () => observer.disconnect();
   }, [visible, reduced]);
 
+  // Track the section in the middle of the screen; the cat picks up its prop.
+  useEffect(() => {
+    if (typeof IntersectionObserver === 'undefined') return;
+    const observer = new IntersectionObserver(entries => {
+      for (const entry of entries) if (entry.isIntersecting && sceneOf[entry.target.id]) setScene(sceneOf[entry.target.id]);
+    }, { rootMargin: '-45% 0px -45% 0px' });
+    document.querySelectorAll('main section[id]').forEach(section => observer.observe(section));
+    return () => observer.disconnect();
+  }, []);
+
+  // After 25 seconds without activity the cat dozes off.
+  useEffect(() => {
+    if (!visible || reduced) return;
+    let timer: ReturnType<typeof setTimeout>;
+    const wake = () => { setSleeping(false); clearTimeout(timer); timer = setTimeout(() => setSleeping(true), 25000); };
+    wake();
+    const events = ['pointermove', 'scroll', 'keydown', 'touchstart'] as const;
+    events.forEach(name => window.addEventListener(name, wake, { passive: true }));
+    return () => { clearTimeout(timer); events.forEach(name => window.removeEventListener(name, wake)); };
+  }, [visible, reduced]);
+
+  // Paw prints trail behind the cat while it walks.
+  useEffect(() => {
+    if (!walking || reduced) return;
+    let step = 0;
+    const timer = setInterval(() => {
+      const layer = prints.current; const box = root.current?.getBoundingClientRect();
+      if (!layer || !box) return;
+      const print = document.createElement('i');
+      print.className = 'paw-print';
+      print.style.left = (box.left + box.width * (step++ % 2 ? .38 : .58)) + 'px';
+      print.style.top = (box.bottom - 10 - (step % 2) * 6) + 'px';
+      layer.appendChild(print);
+      setTimeout(() => print.remove(), 1400);
+    }, 170);
+    return () => clearInterval(timer);
+  }, [walking, reduced]);
+
+  // Easter eggs: type "мяу" or "meow", leave the tab, open the console.
+  useEffect(() => {
+    let typed = '';
+    const onKey = (event: KeyboardEvent) => {
+      if (event.target instanceof HTMLElement && event.target.closest('input, textarea, [contenteditable]')) return;
+      typed = (typed + event.key.toLowerCase()).slice(-4);
+      if (typed.endsWith('мяу') || typed.endsWith('meow')) {
+        typed = '';
+        if (visible) speak('Мяу! Вы нашли пасхалку. 🐾');
+        pawRain(prints.current, reduced);
+      }
+    };
+    const title = document.title;
+    const onVisibility = () => { document.title = document.hidden ? 'Мяу, возвращайтесь 🐾' : title; };
+    window.addEventListener('keydown', onKey);
+    document.addEventListener('visibilitychange', onVisibility);
+    console.log('%c🐾 alimbro.', 'font: 600 22px Unbounded, sans-serif; color: #7DE6D1');
+    console.log('%cПривет, разработчик! Код сайта открыт: https://github.com/IsagiYoichiEgo/resume-react\nПодсказка: напишите на странице «мяу».', 'color: #AAB4C7');
+    return () => { window.removeEventListener('keydown', onKey); document.removeEventListener('visibilitychange', onVisibility); document.title = title; };
+  }, [visible, reduced]);
+
   useEffect(() => () => { clearTimeout(bubbleTimer.current); clearTimeout(happyTimer.current); }, []);
 
   useLayoutEffect(() => { syncBubbleVisibility(root.current); }, [bubble]);
@@ -143,11 +210,22 @@ export function Mascot() {
     try { localStorage.setItem('alimbro-cat', show ? 'visible' : 'hidden'); } catch { /* Works with storage disabled, too. */ }
   }
 
-  if (!visible) return <button className="pet-restore" onClick={() => toggle(true)} aria-label="Вернуть котика" title="Вернуть котика">🐾</button>;
+  const printLayer = <div className="paw-layer" ref={prints} aria-hidden="true" />;
+  if (!visible) return <>{printLayer}<button className="pet-restore" onClick={() => toggle(true)} aria-label="Вернуть котика" title="Вернуть котика">🐾</button></>;
   const animateWalk = walking && !reduced;
-  return <div ref={root} className={'mascot' + (animateWalk ? ' is-walking' : '') + (happy && !reduced ? ' is-happy' : '')} data-direction="right">
+  return <>{printLayer}<div ref={root} className={'mascot' + (animateWalk ? ' is-walking' : '') + (happy && !reduced ? ' is-happy' : '') + (sleeping && !happy ? ' is-sleeping' : '') + (flipping ? ' is-flipping' : '')} data-direction="right" data-scene={scene}>
     {bubble && <div className="pet-bubble" role="status"><span>{bubble}</span><button onClick={() => setBubble('')} aria-label="Закрыть реплику котика">×</button></div>}
-    <button className="pet-button" onClick={() => {
+    <button className="pet-button" data-cursor="Погладить" onClick={() => {
+      const now = Date.now();
+      recentClicks.current = [...recentClicks.current.filter(time => now - time < 2000), now];
+      if (recentClicks.current.length >= 5 && !reduced) {
+        recentClicks.current = [];
+        speak('Сальто! Теперь я заслужил рыбку. 🐟');
+        setFlipping(true);
+        burst(root.current);
+        setTimeout(() => setFlipping(false), 900);
+        return;
+      }
       speak(clickMessages[clicks.current++ % clickMessages.length]);
       lastBubble.current.time = Date.now();
       setHappy(true);
@@ -158,5 +236,35 @@ export function Mascot() {
       <span className="cat-shadow" aria-hidden="true" />
     </button>
     <button className="pet-hide" onClick={() => toggle(false)} aria-label="Спрятать котика" title="Спрятать котика">×</button>
-  </div>;
+  </div></>;
+}
+
+// A shower of paw prints across the screen.
+function pawRain(layer: HTMLDivElement | null, reduced: boolean) {
+  if (!layer || reduced) return;
+  for (let index = 0; index < 26; index++) {
+    const print = document.createElement('i');
+    print.className = 'paw-print is-rain';
+    print.style.left = Math.random() * 100 + 'vw';
+    print.style.top = '-40px';
+    print.style.setProperty('--fall-delay', Math.random() * 900 + 'ms');
+    print.style.setProperty('--fall-turn', (Math.random() * 120 - 60) + 'deg');
+    layer.appendChild(print);
+    setTimeout(() => print.remove(), 3200);
+  }
+}
+
+// Fish and sparkles fly out of the cat after the backflip.
+function burst(cat: HTMLDivElement | null) {
+  if (!cat) return;
+  ['🐟', '✦', '🐟', '✳', '✦', '🐟'].forEach((symbol, index) => {
+    const piece = document.createElement('span');
+    piece.className = 'cat-burst';
+    piece.textContent = symbol;
+    const angle = -Math.PI / 2 + (index - 2.5) * 0.42;
+    piece.style.setProperty('--bx', Math.cos(angle) * 90 + 'px');
+    piece.style.setProperty('--by', Math.sin(angle) * 90 + 'px');
+    cat.appendChild(piece);
+    setTimeout(() => piece.remove(), 1000);
+  });
 }
