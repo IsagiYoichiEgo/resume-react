@@ -1,0 +1,44 @@
+.about-section{display:grid;grid-template-columns:.9fr 1.1fr;align-items:center;gap:90px;padding-block:110px;border-top:1px solid var(--line)}
+.about-intro .about-title{flex-direction:row;align-items:center;gap:22px;margin-bottom:34px}
+.about-spark{display:inline-block;animation:spark-spin 14s linear infinite}
+@keyframes spark-spin{to{transform:rotate(1turn)}}
+.about-lead{margin:0;color:#e0e5ed;font-size:24px;line-height:1.6;letter-spacing:-.025em}
+.about-lead span{color:var(--mint)}
+.about-note{margin:22px 0 0;color:var(--muted);font-size:15px;line-height:1.85}
+.deck-controls{display:flex;align-items:center;gap:22px;margin-top:38px}
+.deck-next{display:inline-flex;align-items:center;gap:12px;min-height:48px;padding:0 20px;border:1px solid #ffffff2e;border-radius:999px;background:transparent;color:var(--cream);font-size:13px}
+.deck-next:hover{border-color:var(--mint);background:#7de6d10f}
+.deck-next span{color:var(--mint);font-size:17px;transition:transform .5s}
+.deck-next:hover span{transform:rotate(180deg)}
+.deck-count{color:#7f8da5;font-size:12px;font-variant-numeric:tabular-nums}
+
+.deck{position:relative;height:380px;touch-action:pan-y;user-select:none;perspective:1200px}
+.deck-card{position:absolute;inset:0 30px 30px 0;display:flex;flex-direction:column;padding:34px 36px;border-radius:26px;color:#10201e;box-shadow:0 24px 60px #02050c80;
+  transform:translate(calc(var(--depth)*14px + var(--dx,0px)),calc(var(--depth)*14px + var(--dy,0px))) rotate(calc(var(--tilt)*(var(--depth) + .4) + var(--drot,0deg))) scale(calc(1 - var(--depth)*.04));
+  z-index:calc(10 - var(--depth));transition:transform .55s cubic-bezier(.2,.8,.2,1),opacity .4s,filter .4s;filter:brightness(calc(1 - var(--depth)*.12))}
+.deck-card[aria-hidden="true"]{pointer-events:none}
+.deck-card:not([aria-hidden="true"]){cursor:grab}
+.deck-card.is-dragging{transition:none;cursor:grabbing}
+.deck-card.is-leaving{transform:translate(calc(var(--throw,1)*120%),-40px) rotate(calc(var(--throw,1)*24deg));opacity:0;transition:transform .38s cubic-bezier(.5,0,.75,0),opacity .38s}
+.deck-card:focus-visible{outline:3px solid var(--cream);outline-offset:6px}
+.tone-mint{background:linear-gradient(150deg,#a6f2e2,#7de6d1 60%,#5fcdb7)}
+.tone-peach{background:linear-gradient(150deg,#ffd2b3,#ffb788 60%,#f59a66)}
+.tone-lilac{background:linear-gradient(150deg,#ddd5ff,#c6bbf7 60%,#a69be3)}
+.tone-cream{background:linear-gradient(150deg,#fffaf0,#f6f3ec 60%,#e5dfd2)}
+.tone-night{background:linear-gradient(150deg,#22324f,#121c31);color:var(--cream)}
+.card-label{align-self:flex-start;padding:6px 12px;border:1px solid currentColor;border-radius:999px;font-size:12px;opacity:.75}
+.deck-card h3{margin:auto 0 14px;font-family:'Unbounded',sans-serif;font-size:clamp(24px,2.4vw,34px);font-weight:600;line-height:1.2;letter-spacing:-.04em}
+.deck-card p{margin:0;max-width:440px;font-size:15px;line-height:1.7;opacity:.8}
+.deck-card ul{display:flex;flex-wrap:wrap;gap:8px;margin:0;padding:0;list-style:none}
+.deck-card li{padding:7px 13px;border-radius:999px;background:#0a10201a;font-size:13px;font-weight:500}
+.tone-night li{background:#ffffff14}
+.card-corner{position:absolute;top:30px;right:34px;font-family:'Unbounded',sans-serif;font-size:13px;opacity:.5}
+
+@media(max-width:1000px){.about-section{gap:50px}.deck{height:360px}}
+@media(max-width:800px){.about-section{grid-template-columns:1fr;gap:50px;padding-block:75px}.deck{height:340px}.about-lead{font-size:21px}}
+@media(max-width:650px){.deck{height:320px}.deck-card{inset:0 18px 18px 0;padding:26px 24px;border-radius:22px;transform:translate(calc(var(--depth)*9px + var(--dx,0px)),calc(var(--depth)*9px + var(--dy,0px))) rotate(calc(var(--tilt)*(var(--depth) + .4) + var(--drot,0deg))) scale(calc(1 - var(--depth)*.04))}.card-corner{top:24px;right:24px}.deck-controls{margin-top:28px}}
+@media(prefers-reduced-motion:reduce){.about-spark{animation:none}.deck-card,.deck-card.is-leaving{transition:opacity .2s}}
+.about-title{display:flex}
+.about-spark{color:var(--peach);font-size:52px;line-height:1}
+@media(max-width:650px){.about-spark{font-size:40px}}
+.deck-card > *{transition:opacity .35s}.deck-card[aria-hidden="true"] > *{opacity:0}

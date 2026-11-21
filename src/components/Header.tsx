@@ -38,7 +38,7 @@ export function Header() {
       <nav id="main-navigation" className={'navigation ' + (open ? 'is-open' : '')} aria-label="Основная навигация">
         {navigation.map(item => <a key={item.id} href={'#' + item.id} aria-current={active === item.id ? 'location' : undefined} onClick={() => setOpen(false)}>{item.label}</a>)}
       </nav>
-      <div className="header-actions"><a className="header-contact" href={profile.whatsapp} target="_blank" rel="noreferrer"><span className="contact-light" aria-hidden="true"/><span>Обсудить проект</span><Icon name="arrow" /></a><button ref={toggle} type="button" className="icon-button menu-button" aria-label={open ? 'Закрыть меню' : 'Открыть меню'} aria-controls="main-navigation" aria-expanded={open} onClick={() => setOpen(!open)}><Icon name={open ? 'close' : 'menu'} /></button></div>
+      <div className="header-actions"><a className="header-contact" href={profile.whatsapp} target="_blank" rel="noreferrer" data-magnetic><span className="contact-light" aria-hidden="true"/><span>Обсудить проект</span><Icon name="arrow" /></a><button ref={toggle} type="button" className="icon-button menu-button" aria-label={open ? 'Закрыть меню' : 'Открыть меню'} aria-controls="main-navigation" aria-expanded={open} onClick={() => setOpen(!open)}><Icon name={open ? 'close' : 'menu'} /></button></div>
     </div>
   </header>;
 }

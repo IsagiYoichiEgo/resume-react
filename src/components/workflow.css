@@ -7,3 +7,36 @@
 .workflow-steps h3{margin:26px 0 12px;font-size:18px;font-weight:500;letter-spacing:-.025em}.workflow-steps p{max-width:290px;margin:0;color:#91a2bb;font-size:13px;line-height:1.85}
 @media(max-width:900px){.workflow-heading h2{font-size:29px}.workflow-steps{gap:25px}.workflow-steps h3{font-size:16px}}
 @media(max-width:650px){.workflow-section{padding-block:0 65px}.workflow-heading{display:block;margin-bottom:32px}.workflow-heading h2{font-size:27px}.workflow-heading>p{font-size:12px;margin-top:15px}.workflow-heading>p br{display:none}.workflow-steps{grid-template-columns:1fr;gap:29px}.workflow-steps::before{top:18px;bottom:20px;left:19px;right:auto;width:1px;height:auto;background:linear-gradient(#7de6d15a,#a69be33a)}.workflow-steps li{position:relative;padding-left:64px;min-height:83px}.workflow-number{position:absolute;left:0;top:0;width:39px;height:39px;box-shadow:0 0 0 6px var(--night);font-size:11px}.workflow-steps h3{margin:4px 0 9px;font-size:17px}.workflow-steps p{font-size:12px}}
+/* step scenes */
+.step-scene{display:block;width:100%;max-width:230px;height:auto;margin-top:26px;padding:14px;border:1px solid var(--line);border-radius:16px;background:linear-gradient(160deg,#121c31,#0d1526);overflow:visible;transition:border-color .3s,transform .4s cubic-bezier(.2,.8,.2,1)}
+.workflow-steps li:hover .step-scene{border-color:#7de6d140;transform:translateY(-4px) rotate(-1deg)}
+.workflow-steps h3{margin-top:22px}
+.step-scene *{transform-box:fill-box;transform-origin:center}
+.scene-chat .bubble{fill:#1f2c45}.scene-chat .b2{fill:#7de6d1}
+.scene-chat .line{stroke:#aab4c7;stroke-width:4;stroke-linecap:round}.scene-chat .l2{stroke:#10201e}
+.scene-chat .typing rect{fill:#1f2c45}.scene-chat .typing circle{fill:#aab4c7}
+.scene-draft .frame{fill:none;stroke:#3a4a68;stroke-width:1.5}.scene-draft circle{fill:#3a4a68}
+.scene-draft .block{fill:#ffb788}.scene-draft .k2{fill:#3a4a68}.scene-draft .k3{fill:#7de6d1}.scene-draft .k4{fill:#c6bbf733}
+.scene-ship .phone{fill:none;stroke:#3a4a68;stroke-width:2}
+.scene-ship .tick{fill:none;stroke:#7de6d1;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:30;stroke-dashoffset:30}
+.scene-ship .row{stroke:#3a4a68;stroke-width:5;stroke-linecap:round}
+.scene-ship .live{fill:#7de6d1}
+/* play only once the step is on screen */
+[data-reveal-state="visible"] .scene-chat .b1,[data-reveal-state="visible"] .scene-chat .l1{animation:pop-loop 6s 0s infinite both}
+[data-reveal-state="visible"] .scene-chat .b2,[data-reveal-state="visible"] .scene-chat .l2{animation:pop-loop 6s .9s infinite both}
+[data-reveal-state="visible"] .scene-chat .typing{animation:pop-loop 6s 1.8s infinite both}
+[data-reveal-state="visible"] .scene-chat .typing circle{animation:dot .9s infinite}
+.scene-chat .typing circle:nth-child(3){animation-delay:.15s!important}.scene-chat .typing circle:nth-child(4){animation-delay:.3s!important}
+@keyframes pop-loop{0%{opacity:0;transform:scale(.6) translateY(8px)}6%,80%{opacity:1;transform:none}90%,100%{opacity:0;transform:none}}
+@keyframes dot{50%{transform:translateY(-3px);opacity:.5}}
+[data-reveal-state="visible"] .scene-draft .block{animation:draw-block 5s infinite both}
+[data-reveal-state="visible"] .scene-draft .k2{animation-delay:.4s}[data-reveal-state="visible"] .scene-draft .k3{animation-delay:.8s}[data-reveal-state="visible"] .scene-draft .k4{animation-delay:1.2s}
+@keyframes draw-block{0%{opacity:0;transform:scaleX(0)}10%,82%{opacity:1;transform:none}92%,100%{opacity:0}}
+.scene-draft .block{transform-origin:left center}
+[data-reveal-state="visible"] .scene-ship .tick{animation:tick 5s infinite both}
+[data-reveal-state="visible"] .scene-ship .t2{animation-delay:.5s}[data-reveal-state="visible"] .scene-ship .t3{animation-delay:1s}
+@keyframes tick{0%{stroke-dashoffset:30}12%,85%{stroke-dashoffset:0}100%{stroke-dashoffset:0;opacity:0}}
+[data-reveal-state="visible"] .scene-ship .live{animation:live 1.8s ease-in-out infinite}
+@keyframes live{0%,100%{transform:scale(.8);opacity:.6}50%{transform:scale(1.15);opacity:1}}
+@media(max-width:650px){.step-scene{max-width:200px;margin-top:14px;padding:10px}}
+@media(prefers-reduced-motion:reduce){.step-scene *{animation:none!important;opacity:1!important;stroke-dashoffset:0!important}}
