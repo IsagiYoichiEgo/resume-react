@@ -1,0 +1,44 @@
+.moods{--p:0;position:relative;height:240vh}
+.moods-stage{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;display:flex;flex-direction:column;justify-content:center}
+.moods-head{text-align:center;margin-bottom:4vh}
+.moods-head h2{margin:0 0 12px;font-family:'Unbounded',sans-serif;font-size:clamp(30px,3.8vw,54px);font-weight:600;letter-spacing:-.05em;color:var(--cream)}
+.moods-head p{margin:0;color:var(--muted);font-size:14px}
+.moods-fan{--spread:calc(min(1,var(--p)*1.8));position:relative;height:clamp(250px,36vh,340px);margin:0;padding:0;list-style:none}
+.mood-card{position:absolute;left:50%;bottom:0;width:clamp(150px,14vw,200px);aspect-ratio:3/4;margin-left:calc(clamp(150px,14vw,200px)/-2);
+  display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:18px 14px 16px;border-radius:22px;box-shadow:0 22px 50px #02050c99;
+  transform-origin:50% 320%;
+  transform:translateX(calc(var(--k)*var(--spread)*clamp(56px,7.6vw,124px))) translateY(calc(var(--a)*var(--spread)*6px)) rotate(calc(var(--k)*var(--spread)*7deg));
+  z-index:calc(10 - var(--a));transition:transform .5s cubic-bezier(.2,.8,.2,1)}
+.mood-card:hover{transform:translateX(calc(var(--k)*var(--spread)*clamp(56px,7.6vw,124px))) translateY(calc(var(--a)*var(--spread)*6px - 26px)) rotate(calc(var(--k)*var(--spread)*7deg));z-index:20}
+.mood-art{position:relative;width:86%;aspect-ratio:140/150;margin-top:6%}
+.mood-art .cat-svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;filter:drop-shadow(0 6px 8px #0003)}
+.mood-card span{font-size:13px;font-weight:600;color:#10201e}
+.mood-card.tone-night span{color:var(--cream)}
+.mood-card.tone-mint{background:linear-gradient(160deg,#a6f2e2,#6fd9c3)}
+.mood-card.tone-peach{background:linear-gradient(160deg,#ffd2b3,#f7a676)}
+.mood-card.tone-lilac{background:linear-gradient(160deg,#ddd5ff,#b4a8ee)}
+.mood-card.tone-cream{background:linear-gradient(160deg,#fffaf0,#e8e1d3)}
+.mood-card.tone-night{background:linear-gradient(160deg,#22324f,#121c31);border:1px solid #ffffff14}
+@media(max-width:650px){.moods{height:200vh}.mood-card{width:120px;margin-left:-60px;padding:12px 10px}.moods-fan{height:250px}.mood-card{transform:translateX(calc(var(--k)*var(--spread)*30px)) translateY(calc(var(--a)*var(--spread)*5px)) rotate(calc(var(--k)*var(--spread)*9deg))}.mood-card:hover{transform:translateX(calc(var(--k)*var(--spread)*30px)) translateY(calc(var(--a)*var(--spread)*5px)) rotate(calc(var(--k)*var(--spread)*9deg))}}
+@media(prefers-reduced-motion:reduce){.moods-fan{--spread:1}.mood-card{transition:none}}
+
+.mood-card{padding:0}
+.mood-card button{display:flex;flex-direction:column;align-items:center;justify-content:space-between;width:100%;height:100%;padding:18px 14px 16px;border:0;border-radius:inherit;background:none;color:inherit;font:inherit;cursor:pointer}
+.mood-card button:focus-visible{outline:3px solid var(--cream);outline-offset:4px}
+.mood-card.is-active{z-index:30;transform:translateX(calc(var(--k)*var(--spread)*clamp(56px,7.6vw,124px))) translateY(calc(var(--a)*var(--spread)*6px - 30px)) rotate(calc(var(--k)*var(--spread)*7deg)) scale(1.06);box-shadow:0 26px 60px #02050ccc,0 0 0 2px var(--cream)}
+.mood-detail{position:relative;z-index:40;display:flex;align-items:center;justify-content:space-between;gap:30px;margin-top:calc(5vh + 50px);background:var(--navy,#0a1020);padding-top:26px;border-top:1px solid var(--line)}
+.mood-detail-inner{animation:detail-in .45s cubic-bezier(.2,.8,.2,1)}
+@keyframes detail-in{from{opacity:0;transform:translateY(10px)}}
+.mood-detail h3{margin:0 0 8px;font-family:'Unbounded',sans-serif;font-size:clamp(20px,2vw,28px);font-weight:600;letter-spacing:-.04em;color:var(--cream)}
+.mood-detail p{margin:0;max-width:560px;color:#c3cddc;font-size:16px;line-height:1.6}
+.mood-detail small{display:block;margin-top:8px;color:var(--mint);font-size:12px}
+.mood-ask{flex-shrink:0;display:inline-flex;align-items:center;min-height:48px;padding:0 22px;border-radius:999px;background:var(--mint);color:#0d2621;font-size:14px;font-weight:600}
+@media(max-width:650px){
+  .mood-card.is-active{transform:translateX(calc(var(--k)*var(--spread)*30px)) translateY(calc(var(--a)*var(--spread)*5px - 22px)) rotate(calc(var(--k)*var(--spread)*9deg)) scale(1.06)}
+  .mood-card button{padding:12px 8px 10px}.mood-card span{font-size:11px;text-align:center}
+  .moods-fan{height:210px}
+  .mood-detail{flex-direction:column;align-items:flex-start;gap:16px;margin-top:3vh}
+  .mood-detail p{font-size:14px}
+  .mood-ask{width:100%;justify-content:center}
+}
+@media(prefers-reduced-motion:reduce){.mood-detail-inner{animation:none}}

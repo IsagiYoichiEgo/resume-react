@@ -8,10 +8,12 @@ const sectionMessages: Record<string, string> = {
   projects: 'Изучаю каждый пиксель. 🔍',
   about: 'Можно просто alimbro. Карточки можно листать!',
   process: 'Тут Аброрбек работает. Я помогаю. Немного.',
+  story: 'Ночью в Бишкеке красиво. Мур.',
+  moods: 'На каждой карточке я. Выбирайте!',
   contact: 'Напишите ему, он быстро отвечает. Мяу!',
 };
 // Which prop the cat holds in each section.
-const sceneOf: Record<string, string> = { home: 'home', projects: 'glass', about: 'ball', process: 'laptop', contact: 'wave' };
+const sceneOf: Record<string, string> = { home: 'home', projects: 'glass', about: 'ball', process: 'laptop', contact: 'wave', story: 'home', moods: 'home' };
 const clickMessages = ['У вас хороший вкус. Мур!', 'Я тут слежу за порядком. И за курсором.', 'Лапка за любопытство! 🐾', 'Проекты выше, контакты ниже. Всё просто.'];
 
 function controlBounds(includeText=false) {
@@ -175,6 +177,13 @@ export function Mascot() {
     return () => clearInterval(timer);
   }, [walking, reduced]);
 
+  // Other parts of the page can make the cat talk.
+  useEffect(() => {
+    const onSay = (event: Event) => { if (visible) { speak((event as CustomEvent<string>).detail); setHappy(true); clearTimeout(happyTimer.current); happyTimer.current = setTimeout(() => setHappy(false), 700); } };
+    window.addEventListener('cat:say', onSay);
+    return () => window.removeEventListener('cat:say', onSay);
+  }, [visible]);
+
   // Easter eggs: type "мяу" or "meow", leave the tab, open the console.
   useEffect(() => {
     let typed = '';
@@ -213,7 +222,7 @@ export function Mascot() {
   const printLayer = <div className="paw-layer" ref={prints} aria-hidden="true" />;
   if (!visible) return <>{printLayer}<button className="pet-restore" onClick={() => toggle(true)} aria-label="Вернуть котика" title="Вернуть котика">🐾</button></>;
   const animateWalk = walking && !reduced;
-  return <>{printLayer}<div ref={root} className={'mascot' + (animateWalk ? ' is-walking' : '') + (happy && !reduced ? ' is-happy' : '') + (sleeping && !happy ? ' is-sleeping' : '') + (flipping ? ' is-flipping' : '')} data-direction="right" data-scene={scene}>
+  return <>{printLayer}<div ref={root} className={'mascot cat-scope' + (animateWalk ? ' is-walking' : '') + (happy && !reduced ? ' is-happy' : '') + (sleeping && !happy ? ' is-sleeping' : '') + (flipping ? ' is-flipping' : '')} data-direction="right" data-scene={scene}>
     {bubble && <div className="pet-bubble" role="status"><span>{bubble}</span><button onClick={() => setBubble('')} aria-label="Закрыть реплику котика">×</button></div>}
     <button className="pet-button" data-cursor="Погладить" onClick={() => {
       const now = Date.now();

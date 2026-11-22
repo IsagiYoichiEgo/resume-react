@@ -1,0 +1,6 @@
+.mission{--p:0;padding-block:18vh 14vh;text-align:center}
+.mission-label{margin:0 0 26px;color:var(--peach);font-size:13px;font-weight:500}
+.mission-text{max-width:1050px;margin:0 auto;font-family:'Unbounded',sans-serif;font-size:clamp(30px,4.6vw,66px);font-weight:600;line-height:1.16;letter-spacing:-.05em}
+.mission-text span{--on:clamp(0,calc((var(--p)*1.15 - var(--w))*9),1);color:color-mix(in srgb,#222c44,var(--cream) calc(var(--on)*100%));transition:color .15s linear}
+.mission-text span.is-accent{color:color-mix(in srgb,#222c44,var(--mint) calc(var(--on)*100%))}
+@media(prefers-reduced-motion:reduce){.mission-text span{--on:1}}

@@ -26,3 +26,6 @@
 .split-title + .split-title .letter{color:color-mix(in srgb,#c9d2e2,var(--peach) calc(var(--near,0)*100%));text-shadow:0 0 calc(var(--near,0)*28px) #ffb78855}
 @keyframes letter-in{from{opacity:0;transform:translateY(.55em) rotate(8deg);filter:blur(8px)}}
 @media(prefers-reduced-motion:reduce){.split-title .letter{animation:none;transition:none}}
+.hero{position:relative;isolation:isolate}
+.hero-toys{position:absolute;inset:0 calc(50% - 50vw);width:100vw;height:100%;z-index:-1;opacity:0;transition:opacity 1.2s ease;pointer-events:none}
+.hero-toys.is-ready{opacity:1}

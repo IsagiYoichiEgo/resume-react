@@ -10,6 +10,9 @@ import { useMagnetic } from './lib/useMagnetic';
 import { Cursor } from './components/Cursor';
 import { About } from './components/About';
 import { Footer } from './components/Footer';
+import { Story } from './components/Story';
+import { Moods } from './components/Moods';
+import { Mission } from './components/Mission';
 import { useViewportReveal } from './lib/useViewportReveal';
 
 export default function App() {
@@ -23,8 +26,11 @@ export default function App() {
       <Hero />
       <Projects />
       <Marquee />
+      <Story />
       <About />
+      <Moods />
       <Workflow />
+      <Mission />
       <Contact />
     </main>
     <Footer />
