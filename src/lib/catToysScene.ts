@@ -2,7 +2,7 @@
 import * as THREE from 'three';
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
 
-type Kind = 'yarn' | 'fish' | 'paw' | 'mouse' | 'bell';
+type Kind = 'yarn' | 'fish' | 'paw' | 'mouse' | 'bell' | 'key' | 'braces' | 'cursor';
 interface Toy { kind: Kind; group: THREE.Group; home: THREE.Vector3; spin: number; phase: number; alive: number; size: number; push: THREE.Vector2 }
 
 const COLORS = { mint: 0x7de6d1, peach: 0xffa06a, cream: 0xfff3e4, pink: 0xff9fb0, lilac: 0xc6bbf7, ink: 0x0a1020, gold: 0xf2c46b };
@@ -12,6 +12,9 @@ const lines: Record<Kind, string[]> = {
   paw: ['Это моя лапка. Буп!', 'Дай пять! 🐾'],
   mouse: ['Мышь! Держите её!', 'Опять убежала…'],
   bell: ['Дзынь! Кто звал котика?', 'Звонок на обед?'],
+  key: ['Клац! Я тоже умею печатать.', 'Enter нажат. Сайт запущен!'],
+  braces: ['Код без котика не компилируется.', '{ мур: true }'],
+  cursor: ['Клик! Это же моя работа.', 'Поймал курсор! Почти.'],
 };
 
 const mat = (color: number, roughness = .45, extra: Partial<THREE.MeshPhysicalMaterialParameters> = {}) =>
@@ -95,14 +98,61 @@ function bell() {
   return group;
 }
 
-const makers: Record<Kind, () => THREE.Group> = { yarn, fish, paw, mouse, bell };
+// A keyboard key with a paw print on top.
+function key() {
+  const group = new THREE.Group();
+  const shell = new THREE.Mesh(new THREE.BoxGeometry(1.7, .7, 1.7, 1, 1, 1), mat(0x1f2c45, .5));
+  shell.position.y = -.15; group.add(shell);
+  const cap = new THREE.Group(); cap.name = 'cap';
+  const top = new THREE.Mesh(new THREE.CapsuleGeometry(.62, .24, 8, 24), mat(COLORS.cream, .4));
+  top.scale.set(1.15, .55, 1.15); cap.add(top);
+  const ink = mat(COLORS.mint, .4);
+  const pad = new THREE.Mesh(new THREE.SphereGeometry(.2, 20, 12), ink); pad.scale.set(1.2, .35, 1); pad.position.set(0, .38, .1); cap.add(pad);
+  [[-.24, -.12], [-.08, -.26], [.08, -.26], [.24, -.12]].forEach(([x, z]) => { const toe = new THREE.Mesh(new THREE.SphereGeometry(.08, 12, 8), ink); toe.scale.set(1, .4, 1); toe.position.set(x, .38, z); cap.add(toe); });
+  cap.position.y = .35; group.add(cap);
+  group.rotation.x = .5;
+  return group;
+}
+
+// Curly braces { } built from tubes.
+function braces() {
+  const group = new THREE.Group();
+  const material = mat(COLORS.mint, .3, { emissive: new THREE.Color(COLORS.mint), emissiveIntensity: .15 });
+  const brace = (side: number) => {
+    const s = side;
+    const curve = new THREE.CatmullRomCurve3([
+      new THREE.Vector3(.35 * s, 1.2, 0), new THREE.Vector3(.05 * s, 1.05, 0), new THREE.Vector3(0, .5, 0), new THREE.Vector3(-.1 * s, .12, 0),
+      new THREE.Vector3(-.35 * s, 0, 0), new THREE.Vector3(-.1 * s, -.12, 0), new THREE.Vector3(0, -.5, 0), new THREE.Vector3(.05 * s, -1.05, 0), new THREE.Vector3(.35 * s, -1.2, 0),
+    ]);
+    const mesh = new THREE.Mesh(new THREE.TubeGeometry(curve, 80, .13, 14), material);
+    mesh.position.x = -.75 * s; mesh.name = side < 0 ? 'right' : 'left';
+    return mesh;
+  };
+  group.add(brace(1), brace(-1));
+  const dot = new THREE.Mesh(new THREE.SphereGeometry(.16, 20, 14), mat(COLORS.peach, .35)); group.add(dot);
+  return group;
+}
+
+// A mouse pointer arrow.
+function cursor() {
+  const shape = new THREE.Shape();
+  shape.moveTo(0, 0); shape.lineTo(0, -1.7); shape.lineTo(.42, -1.3); shape.lineTo(.75, -2.0); shape.lineTo(1.0, -1.88); shape.lineTo(.68, -1.2); shape.lineTo(1.22, -1.2); shape.lineTo(0, 0);
+  const geometry = new THREE.ExtrudeGeometry(shape, { depth: .22, bevelEnabled: true, bevelThickness: .08, bevelSize: .07, bevelSegments: 5 });
+  geometry.center();
+  const group = new THREE.Group();
+  group.add(new THREE.Mesh(geometry, mat(0xf6f3ec, .35)));
+  const edge = new THREE.Mesh(geometry, mat(COLORS.ink, .5)); edge.scale.setScalar(1.08); edge.position.z = -.06; group.add(edge);
+  return group;
+}
+
+const makers: Record<Kind, () => THREE.Group> = { yarn, fish, paw, mouse, bell, key, braces, cursor };
 
 // x/y are fractions of the hero box; placed in the empty margins around the content.
 const desktopLayout: Array<[Kind, number, number, number]> = [
-  ['yarn', .435, .2, .62], ['fish', .9, .08, .5], ['paw', .45, .8, .56], ['mouse', .2, .9, .46], ['bell', .955, .72, .4],
+  ['yarn', .41, .12, .5], ['braces', .9, .09, .46], ['key', .45, .8, .52], ['paw', .2, .9, .42], ['cursor', .93, .76, .4],
 ];
 const mobileLayout: Array<[Kind, number, number, number]> = [
-  ['yarn', .9, .03, .3], ['fish', .8, .5, .34],
+  ['braces', .9, .035, .3], ['yarn', .82, .5, .32],
 ];
 
 export function startCatToys(canvas: HTMLCanvasElement, host: HTMLElement) {
@@ -194,8 +244,8 @@ export function startCatToys(canvas: HTMLCanvasElement, host: HTMLElement) {
     toy.push.lerp(new THREE.Vector2(dist ? dx / dist * force : 0, dist ? dy / dist * force : 0), .08);
     const bob = Math.sin(time * .8 + toy.phase) * toy.size * .12;
     group.position.set(home.x + toy.push.x, home.y + bob + toy.push.y, home.z);
-    group.rotation.y += toy.spin * delta;
-    group.rotation.x = Math.sin(time * .5 + toy.phase) * (toy.kind === 'mouse' ? .1 : .25);
+    if (toy.kind === 'key' || toy.kind === 'cursor') group.rotation.y = Math.sin(time * .6 + toy.phase) * .5; else group.rotation.y += toy.spin * delta;
+    group.rotation.x = Math.sin(time * .5 + toy.phase) * (toy.kind === 'mouse' ? .1 : .25) + (toy.kind === 'key' ? .65 : 0);
     group.scale.setScalar(toy.size);
     if (toy.alive <= 0) return;
     const t = 1 - toy.alive; // 0 → 1 over the animation
@@ -214,6 +264,17 @@ export function startCatToys(canvas: HTMLCanvasElement, host: HTMLElement) {
       group.rotation.set(0, Math.PI, Math.sin(t * 40) * .12);
     }
     if (toy.kind === 'bell') group.rotation.z = Math.sin(t * 36) * .55 * (1 - t);
+    if (toy.kind === 'key') {
+      const cap = group.getObjectByName('cap'); if (cap) cap.position.y = .35 - Math.sin(Math.min(1, t * 3) * Math.PI) * .3;
+      group.rotation.y -= toy.spin * delta;
+    }
+    if (toy.kind === 'braces') {
+      const open = Math.sin(Math.PI * Math.min(1, t * 1.6)) * .55;
+      const left = group.getObjectByName('left'), right = group.getObjectByName('right');
+      if (left) left.position.x = -.75 - open; if (right) right.position.x = .75 + open;
+      group.rotation.y = Math.sin(t * 6) * .3;
+    }
+    if (toy.kind === 'cursor') { const press = 1 - Math.sin(Math.min(1, t * 4) * Math.PI) * .22; group.scale.setScalar(toy.size * press); group.position.x -= ease * toy.size * .6; group.position.y += ease * toy.size * .5; }
   }
 
   let frame = 0, running = false;

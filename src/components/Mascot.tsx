@@ -9,7 +9,7 @@ const sectionMessages: Record<string, string> = {
   about: 'Можно просто alimbro. Карточки можно листать!',
   process: 'Тут Аброрбек работает. Я помогаю. Немного.',
   story: 'Ночью в Бишкеке красиво. Мур.',
-  moods: 'Это всё я. В разном настроении.',
+  moods: 'На каждой карточке я. Выбирайте!',
   contact: 'Напишите ему, он быстро отвечает. Мяу!',
 };
 // Which prop the cat holds in each section.
